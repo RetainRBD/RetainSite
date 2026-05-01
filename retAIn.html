@@ -1,0 +1,2666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>retAIn | Retention by Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+<style>
+
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --black:  #090909;
+  --white:  #FFFFFF;
+  --olive:  #788475;
+  --ash:    #B6BBB4;
+  --gold:   #FFB833;
+  --dark2:  #111111;
+  --dark3:  #161616;
+  --border: #1e1e1e;
+}
+
+/* ─────────────────────────────────────────
+   RESET
+───────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--black); }
+::-webkit-scrollbar-thumb { background:var(--olive); }
+a { text-decoration:none; color:inherit; }
+
+/* ─────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────── */
+.reveal {
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity:1;
+  transform:translateY(0);
+}
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+.reveal-delay-4 { transition-delay:0.4s; }
+.reveal-delay-5 { transition-delay:0.5s; }
+
+/* ─────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────── */
+.eyebrow {
+  display:flex; align-items:center; gap:12px;
+  font-size:10px; font-weight:500;
+  letter-spacing:5px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:20px;
+}
+.eyebrow::before {
+  content:''; display:block;
+  width:24px; height:0.5px;
+  background:var(--olive); flex-shrink:0;
+}
+.section-h2 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:clamp(32px,4.5vw,58px);
+  line-height:1.06; letter-spacing:-0.5px;
+  text-transform:uppercase; margin-bottom:20px;
+}
+.section-h2 .ol { color:var(--olive); }
+.section-h2 .gd { color:var(--gold); }
+.section-h2 .out {
+  -webkit-text-stroke:1px var(--white);
+  color:transparent;
+}
+.section-intro {
+  font-size:16px; color:var(--ash);
+  max-width:540px; line-height:1.85;
+}
+.wrap { max-width:1200px; margin:0 auto; padding:0 56px; }
+
+.btn-primary {
+  font-family:'Poppins',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--black); background:var(--white);
+  padding:18px 38px; display:inline-block;
+  position:relative; overflow:hidden;
+  transition:transform 0.2s;
+  border:none; cursor:pointer;
+}
+.btn-primary::before {
+  content:''; position:absolute;
+  inset:0; background:var(--gold);
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 0.3s ease;
+}
+.btn-primary:hover::before { transform:scaleX(1); }
+.btn-primary:hover { transform:translateY(-2px); }
+.btn-primary span { position:relative; z-index:1; }
+
+.btn-ghost {
+  font-size:11px; font-weight:500;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--ash); display:inline-flex;
+  align-items:center; gap:10px;
+  transition:color 0.2s; cursor:pointer;
+}
+.btn-ghost:hover { color:var(--white); }
+.btn-ghost .arr { display:inline-block; transition:transform 0.25s; }
+.btn-ghost:hover .arr { transform:translateX(6px); }
+
+.rule { border:none; border-top:0.5px solid var(--border); }
+
+/* ─────────────────────────────────────────
+   NAV
+───────────────────────────────────────── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:28px 56px;
+  border-bottom:0.5px solid transparent;
+  transition:all 0.4s ease;
+}
+nav.scrolled {
+  padding:17px 56px;
+  background:rgba(9,9,9,0.95);
+  border-color:var(--border);
+  backdrop-filter:blur(20px);
+}
+.nav-logo {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:20px;
+  letter-spacing:2px; color:var(--white);
+}
+.nav-logo span { color:var(--olive); }
+.nav-links { display:flex; gap:36px; align-items:center; }
+.nav-links a {
+  font-size:10px; font-weight:500;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--ash); transition:color 0.2s;
+  position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute;
+  bottom:-3px; left:0; right:0;
+  height:0.5px; background:var(--olive);
+  transform:scaleX(0); transition:transform 0.3s;
+}
+.nav-links a:hover { color:var(--white); }
+.nav-links a:hover::after { transform:scaleX(1); }
+.nav-cta {
+  font-family:'Poppins',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--black); background:var(--white);
+  padding:12px 24px; transition:background 0.2s, transform 0.15s;
+  border:none; cursor:pointer; display:inline-block;
+}
+.nav-cta:hover { background:var(--gold); transform:translateY(-1px); }
+
+/* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+.hero {
+  min-height:100vh;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:120px 56px 80px;
+  position:relative; overflow:hidden;
+}
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:80px 80px; opacity:0.28;
+  pointer-events:none;
+}
+.hero-glow {
+  position:absolute; top:50%; right:-80px;
+  transform:translateY(-50%);
+  width:720px; height:720px;
+  background:radial-gradient(ellipse,rgba(120,132,117,0.11) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-line {
+  position:absolute; top:0; right:240px;
+  width:0.5px; height:40%;
+  background:linear-gradient(to bottom,transparent,var(--olive),transparent);
+  opacity:0.35;
+}
+.hero-content { position:relative; z-index:1; max-width:860px; }
+
+.hero-eyebrow {
+  display:flex; align-items:center; gap:14px;
+  font-size:10px; font-weight:500;
+  letter-spacing:5px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:24px;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp 0.7s 0.1s ease forwards;
+}
+.hero-eyebrow::before {
+  content:''; display:block; width:36px; height:0.5px;
+  background:var(--olive); flex-shrink:0;
+}
+.hero-h1 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:clamp(40px,5.5vw,72px);
+  line-height:0.97; letter-spacing:-2px;
+  text-transform:uppercase; margin-bottom:28px;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp 0.7s 0.22s ease forwards;
+}
+.hero-h1 .ol { color:var(--olive); }
+.hero-h1 .out {
+  -webkit-text-stroke:1.5px var(--white);
+  color:transparent; display:block;
+}
+.hero-sub {
+  font-size:15px; color:var(--ash);
+  max-width:560px; line-height:1.75;
+  margin-bottom:36px;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp 0.7s 0.34s ease forwards;
+}
+.hero-sub strong { color:var(--white); font-weight:500; }
+.hero-actions {
+  display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp 0.7s 0.46s ease forwards;
+}
+.hero-float {
+  position:absolute; right:56px; top:50%;
+  transform:translateY(-50%);
+  z-index:1;
+  display:flex; flex-direction:column; gap:0;
+  opacity:0; animation:fadeUp 0.7s 0.65s ease forwards;
+}
+.hero-scroll-hint {
+  position:absolute;
+  bottom:60px; left:56px;
+  z-index:1;
+  display:flex; align-items:center; gap:12px;
+  font-size:9px; letter-spacing:4px;
+  text-transform:uppercase; color:var(--border);
+  opacity:0; animation:fadeUp 0.5s 1s ease forwards;
+}
+.hero-scroll-hint::after {
+  content:'↓';
+  color:var(--olive); font-size:14px;
+  animation:bounce 1.6s ease infinite;
+}
+.hero-float-item {
+  padding:18px 24px; background:var(--dark2);
+  border:0.5px solid var(--border); min-width:210px;
+  transition:border-color 0.2s;
+}
+.hero-float-item:hover { border-color:var(--olive); }
+.hero-float-item + .hero-float-item { border-top:none; }
+.hfi-val {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:20px;
+  color:var(--white); display:block; margin-bottom:3px;
+}
+.hfi-val.gd { color:var(--gold); }
+.hfi-label {
+  font-size:9px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--olive);
+}
+.hero-ticker {
+  position:absolute; bottom:0; left:0; right:0;
+  border-top:0.5px solid var(--border); overflow:hidden;
+  opacity:0; animation:fadeUp 0.5s 0.85s ease forwards;
+}
+.ticker-track {
+  display:flex; width:max-content;
+  animation:ticker 32s linear infinite;
+}
+.ticker-item {
+  padding:13px 48px; font-size:9px;
+  letter-spacing:4px; text-transform:uppercase;
+  color:var(--ash); border-right:0.5px solid var(--border);
+  white-space:nowrap; flex-shrink:0;
+}
+.ticker-item .pip { color:var(--gold); margin-right:12px; }
+
+/* ─────────────────────────────────────────
+   PROBLEM
+───────────────────────────────────────── */
+.problem { padding:80px 0 110px; background:var(--dark2); }
+.problem-header {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:end; margin-bottom:64px;
+}
+.problem-cards {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-bottom:2px;
+}
+.problem-card {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:40px 32px;
+  transition:border-color 0.25s;
+  position:relative; overflow:hidden;
+}
+.problem-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:var(--olive);
+  transform:scaleX(0); transition:transform 0.35s;
+}
+.problem-card:hover::before { transform:scaleX(1); }
+.problem-card:hover { border-color:var(--olive); }
+.problem-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:11px;
+  letter-spacing:3px; color:var(--border);
+  display:block; margin-bottom:20px;
+}
+.problem-card h3 {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:16px;
+  text-transform:uppercase; letter-spacing:0.5px;
+  margin-bottom:12px; line-height:1.3;
+}
+.problem-card p {
+  font-size:14px; color:var(--ash); line-height:1.8;
+}
+.problem-banner {
+  background:var(--olive); padding:36px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:40px;
+}
+.problem-banner p {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:clamp(16px,2vw,22px);
+  color:var(--black); line-height:1.4; max-width:700px;
+}
+.problem-banner a {
+  font-family:'Poppins',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--black); background:transparent;
+  border:1.5px solid var(--black);
+  padding:14px 28px; white-space:nowrap;
+  transition:background 0.2s, color 0.2s; flex-shrink:0;
+}
+.problem-banner a:hover {
+  background:var(--black); color:var(--white);
+}
+
+/* ─────────────────────────────────────────
+   FRAMEWORK
+───────────────────────────────────────── */
+.framework { padding:110px 0; background:var(--black); }
+.framework-header {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:end; margin-bottom:64px;
+}
+.phase-nav {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:2px; margin-bottom:2px;
+}
+.phase-tab {
+  padding:20px 20px; background:var(--dark2);
+  border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s;
+  position:relative;
+}
+.phase-tab::after {
+  content:''; position:absolute;
+  bottom:0; left:0; right:0; height:2px;
+  background:var(--olive);
+  transform:scaleX(0); transition:transform 0.3s;
+}
+.phase-tab.active { background:var(--dark3); border-color:var(--olive); }
+.phase-tab.active::after { transform:scaleX(1); }
+.phase-tab.active-gold { border-color:var(--gold); }
+.phase-tab.active-gold::after { background:var(--gold); transform:scaleX(1); }
+.pt-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:9px;
+  letter-spacing:3px; color:var(--border);
+  display:block; margin-bottom:6px;
+  transition:color 0.2s;
+}
+.phase-tab.active .pt-num { color:var(--olive); }
+.phase-tab.active-gold .pt-num { color:var(--gold); }
+.pt-name {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:13px;
+  text-transform:uppercase; letter-spacing:1px;
+  color:var(--ash); transition:color 0.2s;
+}
+.phase-tab.active .pt-name,
+.phase-tab:hover .pt-name { color:var(--white); }
+.phase-tab.active-gold .pt-name { color:var(--gold); }
+.pt-sub {
+  font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--border);
+  display:block; margin-top:4px; transition:color 0.2s;
+}
+.phase-tab.active .pt-sub { color:var(--olive); }
+.phase-tab.active-gold .pt-sub { color:var(--gold); }
+
+.phase-panel { display:none; }
+.phase-panel.active { display:block; animation:fadeUp 0.4s ease; }
+.panel-body {
+  background:var(--dark2); border:0.5px solid var(--border);
+  padding:56px;
+}
+.panel-split {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:56px; margin-bottom:48px;
+  padding-bottom:48px; border-bottom:0.5px solid var(--border);
+}
+.panel-phase-label {
+  font-size:9px; font-weight:500;
+  letter-spacing:5px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.panel-phase-label::before {
+  content:''; width:16px; height:0.5px;
+  background:currentColor; display:block;
+}
+.panel-phase-label.gd { color:var(--gold); }
+.panel-h2 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:clamp(22px,2.8vw,34px);
+  text-transform:uppercase; letter-spacing:0.3px;
+  line-height:1.15; margin-bottom:20px;
+}
+.panel-h2 .ol { color:var(--olive); }
+.panel-h2 .gd { color:var(--gold); }
+.panel-quote {
+  background:var(--black);
+  border-left:2px solid var(--olive);
+  padding:16px 20px; font-size:14px;
+  color:var(--ash); line-height:1.75;
+  font-style:italic;
+}
+.panel-quote.gd { border-left-color:var(--gold); }
+.panel-text {
+  font-size:14px; color:var(--ash); line-height:1.85;
+}
+.panel-text p + p { margin-top:16px; }
+.stages {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+.stage-card {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:24px 20px; transition:border-color 0.2s;
+  position:relative; overflow:hidden;
+}
+.stage-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:var(--olive); transform:scaleX(0);
+  transition:transform 0.3s;
+}
+.stage-card.gd-card::before { background:var(--gold); }
+.stage-card:hover::before { transform:scaleX(1); }
+.stage-card:hover { border-color:var(--olive); }
+.stage-card.gd-card:hover { border-color:var(--gold); }
+.s-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:9px; font-weight:700;
+  letter-spacing:3px; color:var(--border);
+  display:block; margin-bottom:10px;
+}
+.s-name {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:11px;
+  text-transform:uppercase; letter-spacing:1.5px;
+  color:var(--white); margin-bottom:10px;
+}
+.s-name.ol { color:var(--olive); }
+.s-name.gd { color:var(--gold); }
+.s-body {
+  font-size:12px; color:var(--ash); line-height:1.72;
+}
+.panel-outcomes {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-top:2px;
+}
+.outcome-cell {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:22px 20px; text-align:center;
+}
+.oc-val {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:11px;
+  letter-spacing:3px; text-transform:uppercase;
+  display:block; margin-bottom:4px;
+}
+.oc-val.ol { color:var(--olive); }
+.oc-val.gd { color:var(--gold); }
+.oc-label {
+  font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--border);
+}
+.fw-philosophy {
+  margin-top:2px; background:var(--olive);
+  padding:52px 56px;
+  display:grid; grid-template-columns:1fr 2fr;
+  gap:60px; align-items:center;
+  position:relative; overflow:hidden;
+}
+.fw-philosophy::before {
+  content:'retAIn';
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:140px;
+  color:rgba(9,9,9,0.07);
+  position:absolute; right:-10px; top:50%;
+  transform:translateY(-50%);
+  letter-spacing:-4px; pointer-events:none;
+  line-height:1;
+}
+.fp-logo {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:28px;
+  color:var(--black); letter-spacing:1px;
+}
+.fp-logo span { opacity:0.4; }
+.fp-tag {
+  font-size:9px; letter-spacing:5px;
+  text-transform:uppercase; color:rgba(9,9,9,0.5);
+  margin-top:8px; display:block;
+}
+.fp-text {
+  font-family:'Poppins',sans-serif;
+  font-weight:700;
+  font-size:clamp(18px,2.5vw,28px);
+  color:var(--black); line-height:1.4;
+  position:relative; z-index:1;
+}
+.fp-text span { opacity:0.45; font-size:0.72em; display:block; margin-top:8px; }
+
+/* ─────────────────────────────────────────
+   PARTNERSHIP
+───────────────────────────────────────── */
+.partnership { padding:110px 0; background:var(--dark2); }
+.partnership-header {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:end; margin-bottom:64px;
+}
+.partnership-split {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:2px; margin-bottom:2px;
+}
+.partnership-left {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:52px 48px;
+}
+.partnership-right {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:52px 48px;
+  display:flex; flex-direction:column; gap:0;
+}
+.partnership-label {
+  font-size:9px; font-weight:500;
+  letter-spacing:5px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.partnership-label::before {
+  content:''; width:16px; height:0.5px;
+  background:var(--olive); display:block;
+}
+.partnership-left h3 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:clamp(20px,2.5vw,28px);
+  text-transform:uppercase; letter-spacing:0.5px;
+  margin-bottom:28px; line-height:1.2;
+}
+.partnership-prose p {
+  font-size:14px; color:var(--ash);
+  line-height:1.88; margin-bottom:18px;
+}
+.partnership-prose p:last-child { margin-bottom:0; }
+.partnership-prose strong { color:var(--white); font-weight:500; }
+.pr-item {
+  padding:20px 0;
+  border-bottom:0.5px solid var(--border);
+  display:flex; align-items:flex-start; gap:16px;
+  transition:padding-left 0.2s;
+}
+.pr-item:hover { padding-left:6px; }
+.pr-item:first-child { border-top:0.5px solid var(--border); }
+.pr-dot {
+  width:6px; height:6px;
+  background:var(--olive); border-radius:50%;
+  flex-shrink:0; margin-top:6px;
+}
+.pr-item-text h4 {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:13px;
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:4px;
+}
+.pr-item-text p {
+  font-size:13px; color:var(--ash); line-height:1.65;
+}
+.partnership-cta-strip {
+  background:var(--dark3);
+  border:0.5px solid var(--border);
+  border-top:none; padding:36px 48px;
+  display:flex; align-items:center;
+  justify-content:space-between; gap:32px;
+}
+.partnership-cta-strip p {
+  font-size:14px; color:var(--ash);
+  line-height:1.7; max-width:500px;
+}
+.partnership-cta-strip strong { color:var(--white); font-weight:500; }
+
+/* ─────────────────────────────────────────
+   CONSULTATION
+───────────────────────────────────────── */
+.consultation { padding:110px 0; background:var(--black); }
+.consultation-header {
+  text-align:center; max-width:680px;
+  margin:0 auto 72px;
+}
+.consultation-header .eyebrow { justify-content:center; }
+.consultation-header .eyebrow::before { display:none; }
+.consultation-header .section-intro { margin:0 auto; text-align:left; }
+.steps {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-bottom:2px;
+}
+.step-card {
+  background:var(--dark2);
+  border:0.5px solid var(--border);
+  padding:44px 36px; position:relative;
+  transition:border-color 0.25s;
+  overflow:hidden;
+}
+.step-card:hover { border-color:var(--olive); }
+.step-card::before {
+  content:attr(data-step);
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:80px;
+  color:var(--border); position:absolute;
+  top:16px; right:20px; line-height:1;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+}
+.step-label {
+  font-size:9px; font-weight:500;
+  letter-spacing:4px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:16px;
+  display:block; position:relative; z-index:1;
+}
+.step-card h3 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:18px;
+  text-transform:uppercase; letter-spacing:0.5px;
+  margin-bottom:14px; line-height:1.25;
+  position:relative; z-index:1;
+}
+.step-card p {
+  font-size:14px; color:var(--ash); line-height:1.8;
+  position:relative; z-index:1;
+}
+.consultation-cta-block {
+  background:var(--dark2);
+  border:0.5px solid var(--border);
+  border-top:none; padding:60px 56px;
+  display:flex; flex-direction:column;
+  align-items:center; text-align:center; gap:20px;
+}
+.consultation-cta-block h3 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:clamp(28px,4vw,48px);
+  text-transform:uppercase; letter-spacing:-0.5px;
+  line-height:1.1;
+}
+.consultation-cta-block h3 .ol { color:var(--olive); }
+.consultation-cta-block p {
+  font-size:15px; color:var(--ash);
+  line-height:1.8; max-width:520px;
+}
+.trust-signals {
+  display:flex; gap:36px; align-items:center;
+  flex-wrap:wrap; justify-content:center;
+  margin-top:8px;
+}
+.trust-item {
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--ash);
+}
+.trust-item::before {
+  content:''; width:6px; height:6px;
+  background:var(--olive); border-radius:50%;
+  display:block; flex-shrink:0;
+}
+
+/* ─────────────────────────────────────────
+   WHO WE WORK WITH
+───────────────────────────────────────── */
+.who { padding:110px 0; background:var(--dark2); }
+.who-header { margin-bottom:64px; }
+.who-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:2px; margin-bottom:2px;
+}
+.who-card {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:48px 44px; transition:border-color 0.2s;
+}
+.who-card:hover { border-color:var(--olive); }
+.who-card-label {
+  font-size:9px; font-weight:500;
+  letter-spacing:4px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.who-card-label::before {
+  content:''; width:16px; height:0.5px;
+  background:var(--olive); display:block;
+}
+.who-card h3 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:22px;
+  text-transform:uppercase; letter-spacing:0.5px;
+  margin-bottom:16px; line-height:1.2;
+}
+.who-card p {
+  font-size:14px; color:var(--ash);
+  line-height:1.8; margin-bottom:24px;
+}
+.who-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.who-tag {
+  font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--ash);
+  border:0.5px solid var(--border);
+  padding:6px 14px; transition:border-color 0.2s, color 0.2s;
+}
+.who-tag:hover { border-color:var(--olive); color:var(--white); }
+.who-not {
+  background:var(--dark3);
+  border:0.5px solid var(--border);
+  border-top:none; padding:36px 44px;
+  display:flex; align-items:center;
+  justify-content:space-between; gap:40px;
+}
+.who-not p {
+  font-size:14px; color:var(--ash);
+  line-height:1.75; max-width:640px;
+}
+.who-not strong { color:var(--white); font-weight:500; }
+
+/* ─────────────────────────────────────────
+   HOW WE WORK
+───────────────────────────────────────── */
+.howwework { padding:110px 0; background:var(--dark2); }
+
+.hww-header {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:end; margin-bottom:64px;
+}
+
+.hww-intro p {
+  font-size:16px; color:var(--ash);
+  line-height:1.85; border-top:0.5px solid var(--border);
+  padding-top:20px;
+}
+
+/* Tabs */
+.hww-tabs {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-bottom:2px;
+}
+
+.hww-tab {
+  padding:22px 24px; background:var(--black);
+  border:0.5px solid var(--border);
+  cursor:pointer; transition:all 0.2s;
+  position:relative;
+}
+
+.hww-tab::after {
+  content:''; position:absolute;
+  bottom:0; left:0; right:0; height:2px;
+  background:var(--olive);
+  transform:scaleX(0); transition:transform 0.3s;
+}
+
+.hww-tab:hover::after { transform:scaleX(1); }
+.hww-tab.active { background:var(--dark3); border-color:var(--olive); }
+.hww-tab.active::after { transform:scaleX(1); }
+
+.hww-tab-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:9px;
+  letter-spacing:3px; color:var(--border);
+  display:block; margin-bottom:6px;
+  transition:color 0.2s;
+}
+.hww-tab.active .hww-tab-num { color:var(--olive); }
+
+.hww-tab-name {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:14px;
+  text-transform:uppercase; letter-spacing:1px;
+  color:var(--ash); transition:color 0.2s;
+}
+.hww-tab:hover .hww-tab-name,
+.hww-tab.active .hww-tab-name { color:var(--white); }
+
+.hww-tab-sub {
+  font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--border);
+  display:block; margin-top:4px; transition:color 0.2s;
+}
+.hww-tab.active .hww-tab-sub { color:var(--olive); }
+
+/* Panels */
+.hww-panel { display:none; animation:fadeUp 0.4s ease; }
+.hww-panel.active { display:block; }
+
+.hww-panel-body {
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:52px;
+}
+
+.hww-panel-top {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:52px; margin-bottom:44px;
+  padding-bottom:44px;
+  border-bottom:0.5px solid var(--border);
+}
+
+.hww-phase-label {
+  font-size:9px; font-weight:500;
+  letter-spacing:5px; text-transform:uppercase;
+  color:var(--olive); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.hww-phase-label::before {
+  content:''; width:16px; height:0.5px;
+  background:var(--olive); display:block;
+}
+
+.hww-panel-h2 {
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:clamp(20px,2.6vw,32px);
+  text-transform:uppercase; letter-spacing:0.3px;
+  line-height:1.15; margin-bottom:20px;
+}
+.hww-panel-h2 .ol { color:var(--olive); }
+
+.hww-quote {
+  background:var(--dark2);
+  border-left:2px solid var(--olive);
+  padding:16px 20px;
+  font-size:14px; color:var(--ash);
+  line-height:1.75; font-style:italic;
+}
+
+.hww-panel-prose {
+  font-size:14px; color:var(--ash); line-height:1.85;
+}
+.hww-panel-prose p + p { margin-top:16px; }
+
+/* Stage cards */
+.hww-stages {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-bottom:2px;
+}
+
+.hww-stage {
+  background:var(--dark2);
+  border:0.5px solid var(--border);
+  padding:24px 20px;
+  transition:border-color 0.2s;
+  position:relative; overflow:hidden;
+}
+.hww-stage::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:var(--olive);
+  transform:scaleX(0); transition:transform 0.35s;
+}
+.hww-stage:hover::before { transform:scaleX(1); }
+.hww-stage:hover { border-color:var(--olive); }
+
+.hww-stage-num {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:9px; font-weight:700;
+  letter-spacing:3px; color:var(--border);
+  display:block; margin-bottom:10px;
+}
+
+.hww-stage-name {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:12px;
+  text-transform:uppercase; letter-spacing:1.5px;
+  color:var(--white); margin-bottom:10px;
+}
+.hww-stage-name.ol { color:var(--olive); }
+
+.hww-stage-body {
+  font-size:12px; color:var(--ash);
+  line-height:1.72; margin-bottom:14px;
+}
+
+.hww-stage-metrics {
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding-top:12px;
+  border-top:0.5px solid var(--border);
+}
+.hww-stage-metrics span {
+  font-size:9px; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--olive);
+  background:rgba(120,132,117,0.08);
+  padding:4px 8px;
+}
+
+/* Dependency strip */
+.hww-dependency {
+  background:var(--dark3);
+  border:0.5px solid var(--border);
+  border-top:none;
+  padding:24px 28px;
+  display:flex; gap:20px; align-items:flex-start;
+}
+
+.hww-dep-label {
+  font-size:9px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--gold); flex-shrink:0;
+  padding-top:2px;
+  white-space:nowrap;
+}
+
+.hww-dependency p {
+  font-size:13px; color:var(--ash); line-height:1.7;
+}
+
+/* Outcomes */
+.hww-outcomes {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:2px; margin-top:2px;
+}
+
+.hww-outcome {
+  background:var(--dark2);
+  border:0.5px solid var(--border);
+  padding:22px 20px; text-align:center;
+}
+
+.hww-ov {
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:13px;
+  letter-spacing:2px; text-transform:uppercase;
+  display:block; margin-bottom:4px;
+}
+.hww-ov.ol { color:var(--olive); }
+
+.hww-ol {
+  font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--border);
+}
+
+/* Bottom CTA strip */
+.hww-cta-strip {
+  margin-top:2px;
+  background:var(--black);
+  border:0.5px solid var(--border);
+  padding:44px 48px;
+  display:flex; align-items:center;
+  justify-content:space-between; gap:48px;
+}
+
+.hww-cta-headline {
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:clamp(18px,2.2vw,26px);
+  text-transform:uppercase; letter-spacing:0.3px;
+  line-height:1.2; margin-bottom:10px;
+}
+
+.hww-cta-sub {
+  font-size:14px; color:var(--ash);
+  line-height:1.75; max-width:520px;
+}
+
+/* Responsive */
+@media(max-width:960px){
+  .hww-header { grid-template-columns:1fr; gap:28px; }
+  .hww-tabs { grid-template-columns:1fr; }
+  .hww-panel-body { padding:28px 20px; }
+  .hww-panel-top { grid-template-columns:1fr; gap:28px; }
+  .hww-stages { grid-template-columns:1fr; }
+  .hww-outcomes { grid-template-columns:1fr; }
+  .hww-cta-strip { flex-direction:column; gap:24px; text-align:center; }
+  .hww-dependency { flex-direction:column; gap:8px; }
+}
+
+
+footer {
+  background:var(--black);
+  border-top:0.5px solid var(--border);
+  padding:72px 56px 40px;
+}
+.footer-top {
+  display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:48px; margin-bottom:64px;
+}
+.footer-brand-logo {
+  font-family:'Poppins',sans-serif;
+  font-weight:900; font-size:22px;
+  letter-spacing:2px; margin-bottom:14px; display:block;
+}
+.footer-brand-logo span { color:var(--olive); }
+.footer-brand p {
+  font-size:13px; color:var(--ash);
+  line-height:1.75; max-width:260px; margin-bottom:20px;
+}
+.footer-brand-tag {
+  font-size:9px; letter-spacing:5px;
+  text-transform:uppercase; color:var(--olive);
+}
+.footer-col h4 {
+  font-family:'Poppins',sans-serif;
+  font-weight:700; font-size:10px;
+  letter-spacing:4px; text-transform:uppercase;
+  color:var(--white); margin-bottom:20px;
+}
+.footer-col ul { list-style:none; }
+.footer-col ul li { margin-bottom:10px; }
+.footer-col ul li a {
+  font-size:13px; color:var(--ash);
+  transition:color 0.2s;
+}
+.footer-col ul li a:hover { color:var(--white); }
+.footer-bottom {
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding-top:24px; border-top:0.5px solid var(--border);
+}
+.footer-bottom p {
+  font-size:11px; color:var(--border); letter-spacing:1px;
+}
+.footer-bottom span { color:var(--olive); }
+
+/* ─────────────────────────────────────────
+   ABOUT
+───────────────────────────────────────── */
+.about { padding:110px 0; background:var(--black); }
+
+.about-grid {
+  display:grid; grid-template-columns:1fr 1.6fr;
+  gap:80px; align-items:start;
+}
+
+.about-tag {
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-top:28px;
+}
+
+.about-tag-item {
+  font-size:10px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--olive);
+  border:0.5px solid var(--olive);
+  padding:7px 14px;
+}
+
+.about-prose p {
+  font-size:15px; color:var(--ash);
+  line-height:1.85; margin-bottom:18px;
+}
+.about-prose p:last-child { margin-bottom:0; }
+
+.about-divider {
+  height:0.5px; background:var(--border);
+  margin:36px 0;
+}
+
+.about-honest-label {
+  font-size:9px; font-weight:700;
+  letter-spacing:4px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.about-honest-label::before {
+  content:''; width:16px; height:0.5px;
+  background:var(--gold); display:block;
+}
+
+.about-honest p {
+  font-size:14px; color:var(--ash);
+  line-height:1.85; margin-bottom:14px;
+}
+.about-honest p:last-child { margin-bottom:0; }
+
+@media(max-width:960px){
+  .about-grid { grid-template-columns:1fr; gap:40px; }
+}
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes bounce {
+  0%,100% { transform:translateY(0); }
+  50%      { transform:translateY(5px); }
+}
+@keyframes ticker {
+  0%   { transform:translateX(0); }
+  100% { transform:translateX(-50%); }
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width:960px) {
+  nav { padding:22px 24px; }
+  nav.scrolled { padding:16px 24px; }
+  .nav-links { display:none; }
+  .wrap { padding:0 24px; }
+  .hero { padding:140px 24px 110px; }
+  .hero-float { display:none; }
+  .hero-h1 { letter-spacing:-1.5px; }
+  .problem-header,
+  .framework-header,
+  .partnership-header,
+  .partnership-split { grid-template-columns:1fr; }
+  .problem-cards,
+  .steps { grid-template-columns:1fr; }
+  .stages { grid-template-columns:1fr; }
+  .phase-nav { grid-template-columns:repeat(2,1fr); }
+  .panel-split { grid-template-columns:1fr; gap:28px; }
+  .panel-body { padding:28px 20px; }
+  .who-grid { grid-template-columns:1fr; }
+  .footer-top { grid-template-columns:1fr 1fr; gap:32px; }
+  .fw-philosophy { grid-template-columns:1fr; gap:24px; padding:40px 24px; }
+  .partnership-left,
+  .partnership-right { padding:36px 28px; }
+  .partnership-cta-strip { flex-direction:column; text-align:center; }
+  .who-not { flex-direction:column; gap:24px; }
+  .consultation-cta-block { padding:40px 24px; }
+  .footer-bottom { flex-direction:column; gap:12px; text-align:center; }
+}
+@media (max-width:600px) {
+  .hero-actions { flex-direction:column; align-items:flex-start; gap:20px; }
+  .trust-signals { flex-direction:column; gap:14px; }
+  .footer-top { grid-template-columns:1fr; }
+  .problem-banner { flex-direction:column; gap:20px; }
+  .outcome-cell { padding:18px 14px; }
+  .panel-outcomes { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     NAV
+════════════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">ret<span>AI</span>n</a>
+  <div class="nav-links">
+    <a href="#approach">Our Approach</a>
+    <a href="#framework">Framework</a>
+    <a href="#about">About</a>
+    <a href="#partnership">Partnership</a>
+    <a href="#" onclick="openConsultation(); return false;">Free Consultation</a>
+  </div>
+  <a href="#" onclick="openConsultation(); return false;" class="nav-cta">Book Free Call</a>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Full-Funnel Growth &amp; Retention Consultancy</p>
+
+    <h1 class="hero-h1">
+      You Have The Product.<br>
+      You Have The <span class="ol">Traffic.</span><br>
+      <span class="out">You're Missing</span>
+      The Operator.
+    </h1>
+
+    <p class="hero-sub">
+      We become the operator your business never had. Every day we look at your ads, your site, your offer, and your lifecycle. We build the plan, set the priorities, and hand you exactly what to do next with enough context and resources to execute it confidently. <strong>Blindfolded if you had to.</strong> You bring the commitment. We bring everything else.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#" onclick="openConsultation(); return false;" class="btn-primary"><span>Book Free Consultation</span></a>
+      <a href="#framework" class="btn-ghost">See How We Work <span class="arr">→</span></a>
+    </div>
+  </div>
+
+  <div class="hero-float">
+    <div class="hero-float-item">
+      <span class="hfi-val">Full Funnel</span>
+      <span class="hfi-label">Ads, Site, Offer, Lifecycle</span>
+    </div>
+    <div class="hero-float-item">
+      <span class="hfi-val gd">Every Day</span>
+      <span class="hfi-label">Not Monthly. Not Weekly. Daily.</span>
+    </div>
+    <div class="hero-float-item">
+      <span class="hfi-val">Two Operators</span>
+      <span class="hfi-label">No Layers. No Middlemen.</span>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">Scroll</div>
+
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <div class="ticker-item"><span class="pip">◆</span>Retention by Design</div>
+      <div class="ticker-item"><span class="pip">◆</span>Habit Fuels Retention</div>
+      <div class="ticker-item"><span class="pip">◆</span>Retention Fuels Growth</div>
+      <div class="ticker-item"><span class="pip">◆</span>Growth Compounds</div>
+      <div class="ticker-item"><span class="pip">◆</span>Full Funnel. One System.</div>
+      <div class="ticker-item"><span class="pip">◆</span>Fix The Constraint. Not The Symptom.</div>
+      <div class="ticker-item"><span class="pip">◆</span>Scale What Works. Stop Guessing.</div>
+      <div class="ticker-item"><span class="pip">◆</span>The Operator You Never Had.</div>
+      <div class="ticker-item"><span class="pip">◆</span>Retention by Design</div>
+      <div class="ticker-item"><span class="pip">◆</span>Habit Fuels Retention</div>
+      <div class="ticker-item"><span class="pip">◆</span>Retention Fuels Growth</div>
+      <div class="ticker-item"><span class="pip">◆</span>Growth Compounds</div>
+      <div class="ticker-item"><span class="pip">◆</span>Full Funnel. One System.</div>
+      <div class="ticker-item"><span class="pip">◆</span>Fix The Constraint. Not The Symptom.</div>
+      <div class="ticker-item"><span class="pip">◆</span>Scale What Works. Stop Guessing.</div>
+      <div class="ticker-item"><span class="pip">◆</span>The Operator You Never Had.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PROBLEM
+════════════════════════════════════════ -->
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="problem-header">
+      <div>
+        <div class="eyebrow reveal">The Problem</div>
+        <h2 class="section-h2 reveal reveal-delay-1">Most Brands Are<br>Optimizing The<br><span class="out">Wrong Thing.</span></h2>
+      </div>
+      <div class="section-intro reveal reveal-delay-2">
+        The ads are running. The product is solid. Revenue is there. But nothing is compounding. You keep fixing channels in isolation and wondering why the number that actually matters   what a customer is worth over time   refuses to move.
+      </div>
+    </div>
+
+    <div class="problem-cards">
+      <div class="problem-card reveal">
+        <span class="problem-num">01</span>
+        <h3>You Scale Spend. Nothing Improves.</h3>
+        <p>CAC climbs. MER compresses. You push harder into the platform and the return gets worse. The instinct is to blame the algorithm. The real answer is usually sitting somewhere between the ad and the second order.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-1">
+        <span class="problem-num">02</span>
+        <h3>You Build Flows. Churn Stays High.</h3>
+        <p>You add email sequences, launch a loyalty program, tweak the post-purchase experience. Retention metrics barely move. Because the problem was never the flow. It was everything that happened before it and around it.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <span class="problem-num">03</span>
+        <h3>You Hire Agencies. Channels Stay Siloed.</h3>
+        <p>One team runs your ads. Another manages your email. Nobody is watching the full picture at once. Nobody is connecting the dots between what you spend to acquire a customer and what that customer actually does after.</p>
+      </div>
+    </div>
+
+    <div class="problem-banner reveal">
+      <p>The problem was never the ad. It was never the email. It was that nobody was looking at the whole thing at once.</p>
+      <a href="#" onclick="openConsultation(); return false;">Start With A Free Audit</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     HOW WE WORK - MOVED UP
+════════════════════════════════════════ -->
+<section class="howwework" id="approach">
+  <div class="wrap">
+
+    <div class="hww-header">
+      <div>
+        <div class="eyebrow reveal">How We Work</div>
+        <h2 class="section-h2 reveal reveal-delay-1">Our Approach<br>Across Every<br><span class="out">Part Of The Funnel.</span></h2>
+      </div>
+      <div class="hww-intro reveal reveal-delay-2">
+        <p>Most brands have someone running ads, someone managing email, and someone handling the site. Nobody is watching how they talk to each other. We are. Here is exactly how we think about each channel   and why the order you fix them in matters more than the fixes themselves.</p>
+      </div>
+    </div>
+
+    <!-- CHANNEL TABS -->
+    <div class="hww-tabs reveal">
+      <div class="hww-tab active" onclick="showChannel(0)" id="ctab-0">
+        <span class="hww-tab-num">01</span>
+        <div class="hww-tab-name">Paid Media</div>
+        <span class="hww-tab-sub">Meta · Google · Creative</span>
+      </div>
+      <div class="hww-tab" onclick="showChannel(1)" id="ctab-1">
+        <span class="hww-tab-num">02</span>
+        <div class="hww-tab-name">Website</div>
+        <span class="hww-tab-sub">Conversion · Offer · Trust</span>
+      </div>
+      <div class="hww-tab" onclick="showChannel(2)" id="ctab-2">
+        <span class="hww-tab-num">03</span>
+        <div class="hww-tab-name">Email & Lifecycle</div>
+        <span class="hww-tab-sub">Flows · Campaigns · Retention</span>
+      </div>
+    </div>
+
+    <!-- ── CHANNEL 0: PAID MEDIA ── -->
+    <div class="hww-panel active" id="cpanel-0">
+      <div class="hww-panel-body">
+
+        <div class="hww-panel-top">
+          <div>
+            <div class="hww-phase-label">Paid Media</div>
+            <h3 class="hww-panel-h2">The Ad Is A Promise.<br>Everything Downstream<br>Depends On <span class="ol">Keeping It.</span></h3>
+            <div class="hww-quote">
+              Most brands treat paid media like a faucet. Turn it up and revenue goes up. That's not a business. That's a dependency. We build acquisition systems that get more efficient as they scale   not less.
+            </div>
+          </div>
+          <div class="hww-panel-prose">
+            <p>The creative angle you run determines the customer who clicks. The customer who clicks determines who lands on your site. Who lands on your site determines your subscription rate, your LTV, and your churn. The entire downstream performance of your business has a direct line back to the promise in the ad.</p>
+            <p>Most brands run one type of creative for every stage of the funnel. Someone who has never heard of you gets the same ad as someone who has been to your site three times. That's why CAC stays high and MER compresses as you scale. We structure creative around where someone actually is in their relationship with your brand   and what they need to see at that specific moment to move forward.</p>
+            <p>We don't recommend scaling spend until the conversion and retention system is ready to receive it. When it is, scaling looks completely different. MER improves instead of compressing. CAC drops without reducing spend. That only happens when the ad, the site, and the lifecycle are all aligned.</p>
+          </div>
+        </div>
+
+        <!-- Three stage cards -->
+        <div class="hww-stages">
+          <div class="hww-stage">
+            <span class="hww-stage-num">TOF</span>
+            <div class="hww-stage-name ol">Build Familiarity</div>
+            <div class="hww-stage-body">Before you ask for a sale, build a world. Entertainment, education, creator-led content that makes your brand feel familiar before the conversion ask. A warm audience converts at a fraction of the CAC of a cold one. Brands that skip this stage pay for it in every BOF conversion.</div>
+            <div class="hww-stage-metrics">
+              <span>Thumbstop rate</span>
+              <span>Hold rate</span>
+              <span>Video completion</span>
+            </div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">MOF</span>
+            <div class="hww-stage-name ol">Build Belief</div>
+            <div class="hww-stage-body">The customer has seen you. Now they need to believe. UGC, testimonials, routine content, timeline education. What happens at 30 days if they stay consistent. This is also where you pre-frame the customer for retention   before they ever purchase.</div>
+            <div class="hww-stage-metrics">
+              <span>Outbound CTR</span>
+              <span>Landing page CVR</span>
+              <span>Cost per ATC</span>
+            </div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">BOF</span>
+            <div class="hww-stage-name ol">Convert & Retain</div>
+            <div class="hww-stage-body">Warm audiences with clear offers. Catalog, direct response, subscription conversion creative. Framed as the way the product is meant to be used   not just a discount. The subscription rate on day one determines the entire LTV trajectory.</div>
+            <div class="hww-stage-metrics">
+              <span>CAC</span>
+              <span>Sub rate day-one</span>
+              <span>MER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dependency callout -->
+        <div class="hww-dependency">
+          <div class="hww-dep-label">The Dependency</div>
+          <p>The creative promise is a contract. If the ad implies results in two weeks and the product delivers at 45 days   you manufactured your own churn before the customer ever received the product. Churn is often an ad problem wearing a retention costume.</p>
+        </div>
+
+      </div>
+      <div class="hww-outcomes">
+        <div class="hww-outcome"><span class="hww-ov ol">↓ CAC</span><span class="hww-ol">As system matures</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↑ CTR</span><span class="hww-ol">Stage-matched creative</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↑ MER</span><span class="hww-ol">At scale, not despite it</span></div>
+      </div>
+    </div>
+
+    <!-- ── CHANNEL 1: WEBSITE ── -->
+    <div class="hww-panel" id="cpanel-1">
+      <div class="hww-panel-body">
+
+        <div class="hww-panel-top">
+          <div>
+            <div class="hww-phase-label">Website: The Commitment Architecture</div>
+            <h3 class="hww-panel-h2">Most Sites Are Built<br>To Get A Sale.<br><span class="ol">We Build Them To Get A Commitment.</span></h3>
+            <div class="hww-quote">
+              A sale is a transaction. A commitment is a decision. The customer who commits understands the product, believes in the outcome, and buys into the duration. That customer stays. That customer refers. That customer is the foundation of a business that compounds.
+            </div>
+          </div>
+          <div class="hww-panel-prose">
+            <p>Every element of a product page is either moving someone toward a commitment or pulling them toward a one-time transaction. Most brands never think about it this way. They optimize for conversion rate. We optimize for the quality of the conversion.</p>
+            <p>The biggest lever most brands never pull is message match. When the ad promises one thing and the landing page delivers another, conversion dies in that gap. The brain registers the disconnect before the conscious mind does. The page has to continue the exact conversation the ad started. Not a related one. The same one.</p>
+            <p>We built our own framework for evaluating and rebuilding product pages. Four stages. Non-negotiable sequence. Signal, Proof, Commit, Continue. Every site we audit gets mapped against each one in order, because you cannot fix stage three before stage two is working.</p>
+          </div>
+        </div>
+
+        <!-- SPCC Framework Cards -->
+        <div class="hww-stages" style="grid-template-columns:repeat(4,1fr);">
+          <div class="hww-stage">
+            <span class="hww-stage-num">Stage 01</span>
+            <div class="hww-stage-name ol">Signal</div>
+            <div class="hww-stage-body">Three seconds to know this is for them. The headline names the transformation, not the product. The imagery shows context, not just the product. A stranger should be able to describe what this page sells in three seconds or it is leaking traffic before a single word is read.</div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">Stage 02</span>
+            <div class="hww-stage-name ol">Proof</div>
+            <div class="hww-stage-body">Belief before price. For most DTC categories the customer has been disappointed before. That skepticism lives in their body when they land. Proof disarms it with specificity. Reviews at the right stage of the journey. Timeline education that pre-frames retention before the first purchase.</div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">Stage 03</span>
+            <div class="hww-stage-name ol">Commit</div>
+            <div class="hww-stage-body">Subscription is not a discount. It is the way the product is meant to be used. When it is framed that way, the subscription rate changes dramatically. Not because you offered more savings but because you offered more sense. The offer has to make commitment feel like the obvious logical choice.</div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">Stage 04</span>
+            <div class="hww-stage-name ol">Continue</div>
+            <div class="hww-stage-body">The first purchase is the beginning of a relationship, not the completion of a transaction. The page shows what happens next. The product ecosystem, the community, the transformation arc. Buying once should feel like the entry point, not the finish line.</div>
+          </div>
+        </div>
+
+        <div class="hww-dependency">
+          <div class="hww-dep-label">The Dependency</div>
+          <p>How the offer is framed on the product page determines first-purchase subscription rate. That single metric has a direct line to LTV trajectory, sustainable CAC, and your ability to scale spend without compressing MER. The entire chain starts with copy on a product page.</p>
+        </div>
+
+      </div>
+      <div class="hww-outcomes">
+        <div class="hww-outcome"><span class="hww-ov ol">↑ CVR</span><span class="hww-ol">Message match unlocked</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↑ Sub Rate</span><span class="hww-ol">Commit stage optimized</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↑ LTV</span><span class="hww-ol">Day-one trajectory changes</span></div>
+      </div>
+    </div>
+
+    <!-- ── CHANNEL 2: EMAIL ── -->
+    <div class="hww-panel" id="cpanel-2">
+      <div class="hww-panel-body">
+
+        <div class="hww-panel-top">
+          <div>
+            <div class="hww-phase-label">Email & Lifecycle</div>
+            <h3 class="hww-panel-h2">Flows Are The Foundation.<br>Campaigns Are The<br><span class="ol">Ongoing Relationship.</span></h3>
+            <div class="hww-quote">
+              If your lifecycle is healthy   and we're talking flows alone, not campaigns   it should generate 30 to 40 percent of your total monthly revenue automatically. Most brands are leaving that money on the table every single month.
+            </div>
+          </div>
+          <div class="hww-panel-prose">
+            <p>The most critical moment in a subscription customer's lifecycle is day 14. By then the novelty has worn off. They're using the product and forming an opinion about whether it works. If the onboarding flow hasn't proactively addressed this moment   set timeline expectations, reinforced the habit, connected them to a community   this is when the decision to cancel is made. The actual cancellation might happen at day 30. The decision happened at day 14.</p>
+            <p>Most brands think about email as a channel for selling. We think about it as a system for building habit. The difference shows up in churn rate. A customer who has a habit doesn't comparison shop. Doesn't need a coupon. Comes back because the routine is already built.</p>
+            <p>We build two versions of every lifecycle   one for subscription brands and one for non-subscription. The philosophy is the same. The timing, triggers, and messaging differ based on the product's natural usage cycle. Not a content calendar. The actual rhythm of how someone uses the product.</p>
+          </div>
+        </div>
+
+        <!-- Flow architecture -->
+        <div class="hww-stages">
+          <div class="hww-stage">
+            <span class="hww-stage-num">Pre</span>
+            <div class="hww-stage-name ol">Acquisition Flows</div>
+            <div class="hww-stage-body">Welcome series, abandoned cart, abandoned browse. The welcome flow is the most important flow in the system   your one chance to establish the brand, build belief, and make the first purchase feel inevitable before the discount even enters the conversation.</div>
+            <div class="hww-stage-metrics">
+              <span>Open rate</span>
+              <span>Click rate</span>
+              <span>Flow CVR</span>
+            </div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">Post</span>
+            <div class="hww-stage-name ol">Retention Flows</div>
+            <div class="hww-stage-body">Onboarding, replenishment, subscription renewal, churn deflection, winback. Built around the product's actual usage cycle   30 or 60 days   not arbitrary send schedules. Communication arrives when it's relevant and feels like it was written for that exact moment.</div>
+            <div class="hww-stage-metrics">
+              <span>Churn rate</span>
+              <span>LTV:CAC</span>
+              <span>MRR growth</span>
+            </div>
+          </div>
+          <div class="hww-stage">
+            <span class="hww-stage-num">Camp</span>
+            <div class="hww-stage-name ol">Campaign Strategy</div>
+            <div class="hww-stage-body">Flows are the foundation. Campaigns are the ongoing relationship. Segmented by subscriber status, purchase history, and engagement. Subscribers never receive the same email as one-time buyers. The relationship is different. The message has to be too.</div>
+            <div class="hww-stage-metrics">
+              <span>Revenue per send</span>
+              <span>List health</span>
+              <span>Segment CVR</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hww-dependency">
+          <div class="hww-dep-label">The Dependency</div>
+          <p>A review collected at day 45   when the customer is experiencing the benefit   is a completely different asset than one collected at day 3. That review goes onto the site, into MOF creative, into lifecycle emails. One correctly timed request touches four stages of the funnel simultaneously.</p>
+        </div>
+
+      </div>
+      <div class="hww-outcomes">
+        <div class="hww-outcome"><span class="hww-ov ol">30-40%</span><span class="hww-ol">Revenue from flows alone</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↓ Churn</span><span class="hww-ol">Built around usage cycle</span></div>
+        <div class="hww-outcome"><span class="hww-ov ol">↑ LTV</span><span class="hww-ol">Habit compounds</span></div>
+      </div>
+    </div>
+
+    <!-- Bottom CTA strip -->
+    <div class="hww-cta-strip reveal">
+      <div>
+        <p class="hww-cta-headline">Every channel depends on the others.<br>We watch all of them at once.</p>
+        <p class="hww-cta-sub">That's the thing nobody else is doing. And it's why the brands that work with us stop optimizing channels in isolation and start watching growth compound.</p>
+      </div>
+      <a href="#" onclick="openConsultation(); return false;" class="btn-primary"><span>Book Free Consultation</span></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FRAMEWORK
+════════════════════════════════════════ -->
+<section class="framework" id="framework">
+  <div class="wrap">
+    <div class="framework-header">
+      <div>
+        <div class="eyebrow reveal">The retAIn Framework</div>
+        <h2 class="section-h2 reveal reveal-delay-1">How We Build<br>Growth That<br><span class="out">Compounds.</span></h2>
+      </div>
+      <div class="section-intro reveal reveal-delay-2">
+        Four phases. One system. Built around how customers actually behave   not how agencies like to report. Every phase earns the next one. The sequence is the strategy.
+      </div>
+    </div>
+
+    <div class="phase-nav reveal">
+      <div class="phase-tab active" onclick="showPhase(0)" id="tab-0">
+        <span class="pt-num">Phase 01</span>
+        <div class="pt-name">Signal</div>
+        <span class="pt-sub">Find What's Actually Broken</span>
+      </div>
+      <div class="phase-tab" onclick="showPhase(1)" id="tab-1">
+        <span class="pt-num">Phase 02</span>
+        <div class="pt-name">Foundation</div>
+        <span class="pt-sub">Fix Before You Fuel</span>
+      </div>
+      <div class="phase-tab" onclick="showPhase(2)" id="tab-2">
+        <span class="pt-num">Phase 03</span>
+        <div class="pt-name">Habituation</div>
+        <span class="pt-sub">Build The Repeat</span>
+      </div>
+      <div class="phase-tab" onclick="showPhase(3)" id="tab-3">
+        <span class="pt-num">Phase 04</span>
+        <div class="pt-name">Scale</div>
+        <span class="pt-sub">Earn The Right To Grow</span>
+      </div>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="phase-panel active" id="panel-0">
+      <div class="panel-body">
+        <div class="panel-split">
+          <div>
+            <div class="panel-phase-label">Phase 01   Signal</div>
+            <h2 class="panel-h2">Before We Touch Anything,<br>We Find What's <span class="ol">Actually</span> Wrong.</h2>
+            <div class="panel-quote">Most brands fix symptoms. We find the root. Because the fix for a conversion rate problem looks completely different from the fix for a churn problem. Fixing the wrong thing first is how brands waste months moving in the wrong direction.</div>
+          </div>
+          <div class="panel-text">
+            <p>The first thing we do is nothing. We read the data before we write a strategy. We pull every number that matters across the full funnel   what it costs to acquire a customer, what that customer is worth over time, where they drop off, how fast they churn, and whether lifetime value actually supports what you're spending to bring them in.</p>
+            <p>Then we name the real constraint. Not the symptom. The root. We identify exactly where value is being lost   whether that's in the ad, on the site, in the offer, or somewhere in the lifecycle that nobody has looked at yet.</p>
+            <p>Then we build the sequence. What gets fixed first. What gets fixed second. Why the order matters as much as the work itself. The sequence is the strategy.</p>
+          </div>
+        </div>
+        <div class="stages">
+          <div class="stage-card">
+            <span class="s-num">01   A</span>
+            <div class="s-name">Full Funnel Diagnostic</div>
+            <div class="s-body">We audit every layer   paid media, site experience, offer structure, email and lifecycle coverage, and core performance metrics. We build the real picture before drawing any conclusions.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">01   B</span>
+            <div class="s-name">Constraint Identification</div>
+            <div class="s-body">We name the root cause   not the surface symptom. High CAC is often a conversion rate problem. High churn is often an onboarding gap. We find the actual source before prescribing anything.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">01   C</span>
+            <div class="s-name">Order of Operations</div>
+            <div class="s-body">We sequence the work with precision. You cannot fix retention if acquisition is bringing in the wrong customer. The sequence determines the outcome. We build it before we touch anything.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-outcomes">
+        <div class="outcome-cell"><span class="oc-val ol">Clarity</span><span class="oc-label">On the real constraint</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">Sequenced</span><span class="oc-label">Priority roadmap</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">30-Day</span><span class="oc-label">Implementation plan</span></div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-panel" id="panel-1">
+      <div class="panel-body">
+        <div class="panel-split">
+          <div>
+            <div class="panel-phase-label">Phase 02   Foundation</div>
+            <h2 class="panel-h2">Fix The Machine<br>Before You <span class="ol">Fuel It.</span></h2>
+            <div class="panel-quote">Most brands underestimate how much their product page is costing them. Not because it looks bad. Because it doesn't answer the right questions in the right order. Paid traffic into a weak foundation is an expensive way to collect bounces.</div>
+          </div>
+          <div class="panel-text">
+            <p>Once we know what's broken, we fix it before touching spend. A potential customer has seconds to understand what the product is, why it matters, and whether it's for them. If that clarity isn't there, every ad dollar is working against you.</p>
+            <p>We rebuild the narrative around the transformation the customer is actually buying   not the product's features. What happens early. What happens if they stay consistent. What changes for them. That shift changes how people evaluate the purchase before price even becomes relevant.</p>
+            <p>We also rebuild the offer. When repeat purchase or subscription is right for the brand, it has to become the obvious choice   not a discount mechanic. When it's framed as the way the product is meant to be used, commitment changes dramatically. And that day-one commitment changes the entire trajectory of what that customer is worth.</p>
+          </div>
+        </div>
+        <div class="stages">
+          <div class="stage-card">
+            <span class="s-num">02   A</span>
+            <div class="s-name ol">Narrative Clarity</div>
+            <div class="s-body">We simplify to one transformation. Not better. The only. When positioning becomes that clear, conversion intent changes almost immediately. People understand exactly what they are buying into.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">02   B</span>
+            <div class="s-name ol">Conversion Architecture</div>
+            <div class="s-body">We rebuild the purchase path   answering the right questions in the right order. Friction removed. Value made obvious before price becomes relevant. From ad to checkout, one clear continuous message.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">02   C</span>
+            <div class="s-name ol">Offer Engineering</div>
+            <div class="s-body">We restructure how the offer is framed so that repeat purchase becomes the natural choice. Not a transaction. A commitment to an outcome. That reframe changes the economics of every customer from day one.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-outcomes">
+        <div class="outcome-cell"><span class="oc-val ol">Conversion</span><span class="oc-label">Rate improves</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">AOV</span><span class="oc-label">Per order increases</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">Day-One LTV</span><span class="oc-label">Trajectory changes</span></div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-panel" id="panel-2">
+      <div class="panel-body">
+        <div class="panel-split">
+          <div>
+            <div class="panel-phase-label">Phase 03   Habituation</div>
+            <h2 class="panel-h2">The Repeat Purchase<br>Is A Byproduct<br>Of <span class="ol">Habit.</span></h2>
+            <div class="panel-quote">This is the phase most agencies skip. They optimize the acquisition, build a few email flows, and call it retention. It isn't. Real retention is built around how the product is actually used   not a content calendar.</div>
+          </div>
+          <div class="panel-text">
+            <p>Every product has a natural rhythm   a window when someone is actively using it, starting to feel results, and approaching a decision point about whether to continue. We build the entire lifecycle around that rhythm. Communication arrives when it's relevant and feels like it was written for that exact moment.</p>
+            <p>But mechanics alone aren't enough. The brands that retain at the highest level build something beyond the transaction. Continuity. A sense of progress. A reason to stay engaged that goes beyond the product itself. Community, shared experience, identity   these are what make a behavior stick when a discount can't.</p>
+            <p>The goal of this phase is one thing: make the repeat purchase feel inevitable, not persuaded. When a customer has a habit, they don't comparison shop. They don't need a coupon. They come back because the routine is already built.</p>
+          </div>
+        </div>
+        <div class="stages">
+          <div class="stage-card">
+            <span class="s-num">03   A</span>
+            <div class="s-name ol">Cycle-Based Lifecycle</div>
+            <div class="s-body">Every product has a natural usage window. We build communication around that cycle. Messages arrive when they're relevant. That's what makes them feel personal instead of automated.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">03   B</span>
+            <div class="s-name ol">Belonging System</div>
+            <div class="s-body">We build continuity beyond the transaction. Shared experience, community, a sense of progress alongside others. Belonging drives consistency. Consistency drives lifetime value. LTV drives everything else.</div>
+          </div>
+          <div class="stage-card">
+            <span class="s-num">03   C</span>
+            <div class="s-name ol">Churn Architecture</div>
+            <div class="s-body">We identify when customers leave, why they leave, and what intervention at which moment changes that. Winback systems and churn deflection built around decision timing   not desperation discounts.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-outcomes">
+        <div class="outcome-cell"><span class="oc-val ol">Churn</span><span class="oc-label">Drops significantly</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">LTV:CAC</span><span class="oc-label">Ratio improves</span></div>
+        <div class="outcome-cell"><span class="oc-val ol">MRR</span><span class="oc-label">Stabilizes and grows</span></div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase-panel" id="panel-3">
+      <div class="panel-body">
+        <div class="panel-split">
+          <div>
+            <div class="panel-phase-label gd">Phase 04   Scale</div>
+            <h2 class="panel-h2">You Earn The Right<br>To Scale.<br><span class="gd">You Don't Just Decide To.</span></h2>
+            <div class="panel-quote gd">We don't recommend scaling spend until the foundation is solid and retention is working. Scaling spend into a broken system doesn't accelerate growth. It accelerates losses.</div>
+          </div>
+          <div class="panel-text">
+            <p>But when the system works, scaling looks completely different. Acquisition becomes more efficient   not because you found cheaper clicks, but because the site converts better, the offer retains, and the creative matches where people actually are in the buying process.</p>
+            <p>Creative strategy at this stage is structured around the buying journey. Someone who has never heard of you needs something completely different from someone who has visited twice and hasn't committed. We build for every stage of that journey.</p>
+            <p>When acquisition, conversion, and retention are all working simultaneously, something changes in the math. Retention starts funding acquisition. CAC drops without reducing spend. MER improves as you scale instead of compressing. Growth stops feeling fragile. That's the signal the system is working. That's when you lean in.</p>
+          </div>
+        </div>
+        <div class="stages">
+          <div class="stage-card gd-card">
+            <span class="s-num">04   A</span>
+            <div class="s-name gd">Intent-Matched Creative</div>
+            <div class="s-body">Creative structured by buying stage. Awareness needs education. Consideration needs proof. Decision needs a reason to commit now. One creative for all three stages is why outbound performance stays flat as spend increases.</div>
+          </div>
+          <div class="stage-card gd-card">
+            <span class="s-num">04   B</span>
+            <div class="s-name gd">CAC Efficiency</div>
+            <div class="s-body">CAC drops when the site converts better, the offer is clearer, and the creative matches intent. That improvement compounds every single month   and changes what you can afford to spend on the next customer.</div>
+          </div>
+          <div class="stage-card gd-card">
+            <span class="s-num">04   C</span>
+            <div class="s-name gd">MER at Scale</div>
+            <div class="s-body">MER improving as spend increases is the proof the system is working. It only happens when all four levers   acquisition, conversion, retention, lifecycle   work simultaneously. That's what we build toward from Phase 01.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-outcomes">
+        <div class="outcome-cell"><span class="oc-val gd">CAC</span><span class="oc-label">Drops as you scale</span></div>
+        <div class="outcome-cell"><span class="oc-val gd">MER</span><span class="oc-label">Improves under spend</span></div>
+        <div class="outcome-cell"><span class="oc-val gd">Growth</span><span class="oc-label">Compounds</span></div>
+      </div>
+    </div>
+
+    <div class="fw-philosophy reveal">
+      <div>
+        <div class="fp-logo">ret<span>AI</span>n</div>
+        <span class="fp-tag">Retention by Design</span>
+      </div>
+      <div class="fp-text">
+        Habit fuels retention.<br>
+        Retention fuels growth.<br>
+        Growth compounds.
+        <span>That's not a tagline. That's the sequence.</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ABOUT
+════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     ABOUT
+════════════════════════════════════════ -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-left reveal">
+        <div class="eyebrow">Who We Are</div>
+        <h2 class="section-h2">We Built The Thing<br>We Wished<br><span class="out">Existed.</span></h2>
+        <div class="about-tag reveal reveal-delay-1">
+          <span class="about-tag-item">Two Operators</span>
+          <span class="about-tag-item">Media Buyers</span>
+          <span class="about-tag-item">Full Funnel</span>
+        </div>
+      </div>
+      <div class="about-right reveal reveal-delay-2">
+        <div class="about-prose">
+          <p>We are two media buyers who spent years running paid acquisition for DTC brands. We have seen what healthy growth looks like from inside the ad account. We have also seen what churn looks like before it shows up in the retention dashboard, because most of the time it starts in the creative, long before the customer ever receives the product.</p>
+          <p>Most operators live inside one channel. We could never stop seeing the connections between all of them. So we built a model around that.</p>
+          <p>retAIn exists because we got tired of watching brands fix the wrong thing. Great products, real traffic, genuine demand, stuck on a treadmill. The churn was not a retention problem. The CAC was not an acquisition problem. They were symptoms of a system where nobody was watching the whole picture at once.</p>
+          <p>We watch the whole picture. Every day. And we tell you exactly what it means and exactly what to do about it.</p>
+        </div>
+        <div class="about-divider"></div>
+        <div class="about-honest">
+          <div class="about-honest-label">Why We Consult Instead Of Execute</div>
+          <p>The thing you are paying for is our operator brain. The ability to look at your ads, your site, your offer, and your lifecycle simultaneously and see what someone living in only one of those channels cannot see. The moment we spread that across execution work for multiple clients, it stops being sharp. We become another agency managing tasks instead of two operators solving the real problem.</p>
+          <p>So we stay at the strategy layer. We build the plan, set the priorities, and hand you everything you need to execute, clearly enough to do it blindfolded. You bring the commitment. We bring everything else.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PARTNERSHIP
+════════════════════════════════════════ -->
+<section class="partnership" id="partnership">
+  <div class="wrap">
+    <div class="partnership-header">
+      <div>
+        <div class="eyebrow reveal">What A Partnership Looks Like</div>
+        <h2 class="section-h2 reveal reveal-delay-1">A Full-Funnel Operator<br>In Your Corner.<br><span class="out">Every Single Day.</span></h2>
+      </div>
+      <div class="section-intro reveal reveal-delay-2">
+        This isn't a monthly retainer where you get a deck and a call. This is what it actually looks like to have someone who thinks like an operator embedded in your business   watching everything, building the plan, and making sure you always know exactly what to do next.
+      </div>
+    </div>
+
+    <div class="partnership-split">
+      <div class="partnership-left reveal">
+        <div class="partnership-label">How It Feels</div>
+        <h3>The Operator You Never Had</h3>
+        <div class="partnership-prose">
+          <p>Every week starts with a strategy call. Not a status update. A real conversation about what's working, what isn't, and exactly what we're doing about it. Thirty minutes. Clear priorities. You leave knowing exactly where to focus.</p>
+          <p>Between calls, you have a <strong>direct Slack channel</strong>. Not a ticketing system. Not a response window. A direct line to someone who has looked at your numbers that morning and has context on everything happening in your business.</p>
+          <p>Every week you get a Loom   a recorded walkthrough of what we're seeing across your ads, your site, and your email performance. Context you can share with your team without scheduling another meeting.</p>
+          <p>We build a rolling three-month plan and chip away at it together. Priorities shift. The plan adjusts. <strong>Nothing falls through the cracks.</strong> You always know what the next move is and exactly how to make it.</p>
+        </div>
+      </div>
+
+      <div class="partnership-right reveal reveal-delay-1">
+        <div class="partnership-label">What You Get</div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Free Growth Audit</h4>
+            <p>Before anything else, we look at your ads, your site, and your email performance. We hand you a report with your top priorities. No obligation to continue.</p>
+          </div>
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Weekly 30-Min Strategy Call</h4>
+            <p>Not a check-in. A working session. Priorities set, questions answered, next steps clear before you hang up.</p>
+          </div>
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Weekly Loom Walkthrough</h4>
+            <p>A recorded review of your ads, site, and email performance every week. Shareable, referenceable, actionable.</p>
+          </div>
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Daily Slack Access</h4>
+            <p>A direct line. Not a queue. If something comes up, you have someone who knows your business ready to respond.</p>
+          </div>
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Rolling 3-Month Execution Plan</h4>
+            <p>A living roadmap built around your specific constraints. Always current. Always sequenced. Always clear on what's next.</p>
+          </div>
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot"></div>
+          <div class="pr-item-text">
+            <h4>Constant Full-Funnel Oversight</h4>
+            <p>Ads, site, offer, lifecycle. All of it. Watched every single day by someone whose job is to make sure nothing slips.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="partnership-cta-strip reveal">
+      <p>We don't do the work for you. We give you <strong>everything you need to do it yourself</strong>   the direction, the resources, the exact next step   clearly enough to execute it blindfolded. You bring the commitment. We bring everything else.</p>
+      <a href="#" onclick="openConsultation(); return false;" class="btn-primary"><span>Start With A Free Audit</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CONSULTATION
+════════════════════════════════════════ -->
+<section class="consultation" id="consultation">
+  <div class="wrap">
+    <div class="consultation-header">
+      <div class="eyebrow">Free Consultation</div>
+      <h2 class="section-h2 reveal">Start With<br>Clarity.<br><span class="ol">No Catch.</span></h2>
+      <p class="section-intro reveal reveal-delay-1">The first conversation is free. We look at your ads, your site, and your email performance. We tell you exactly what we see   the priorities holding your growth back and what we would do about them. Whether you work with us after that is completely up to you.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step-card reveal" data-step="01">
+        <span class="step-label">Step One</span>
+        <h3>You Book The Call</h3>
+        <p>Pick a time that works. We send you a short intake form   just enough context so we're not spending the call on introductions. Share access to your ads, your site, and your email platform beforehand so we can review everything before we speak.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-1" data-step="02">
+        <span class="step-label">Step Two</span>
+        <h3>We Audit Live</h3>
+        <p>Forty-five minutes. We walk through exactly what we're seeing   what's working, what's leaking, and where the real constraint lives. No fluff. No pitch. Just a clear, honest read on your business from two people who've seen this before.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2" data-step="03">
+        <span class="step-label">Step Three</span>
+        <h3>You Leave With A Report</h3>
+        <p>Three or more high-priority action items in writing. Specific to your business. Yours to keep and implement whether you work with us or not. If it makes sense to continue, we'll talk about what that looks like. No pressure. No pitch.</p>
+      </div>
+    </div>
+
+    <div class="consultation-cta-block reveal">
+      <h3>Ready To Find Out<br>What's Actually <span class="ol">Holding You Back?</span></h3>
+      <p>The audit is free. The report is yours. The only thing you're committing to is forty-five minutes and a clearer picture of your business than you had before.</p>
+      <a href="https://calendly.com/jonreh26/30min?back=1&month=2026-05" class="btn-primary" style="margin-top:8px;"><span>Book Your Free Consultation</span></a>
+      <div class="trust-signals">
+        <div class="trust-item">No sales pitch</div>
+        <div class="trust-item">Report is yours to keep</div>
+        <div class="trust-item">Limited spots per month</div>
+        <div class="trust-item">45 minutes flat</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     WHO WE WORK WITH
+════════════════════════════════════════ -->
+<section class="who" id="who">
+  <div class="wrap">
+    <div class="who-header">
+      <div class="eyebrow reveal">Ideal Partners</div>
+      <h2 class="section-h2 reveal reveal-delay-1">We Work With A<br><span class="out">Specific Kind</span><br>Of Brand.</h2>
+      <p class="section-intro reveal reveal-delay-2">We're selective because we have to be. The model only works when the brand is ready to move and the product has real CLV potential. Here's how to know if that's you.</p>
+    </div>
+
+    <div class="who-grid">
+      <div class="who-card reveal">
+        <div class="who-card-label">You're A Fit</div>
+        <h3>Ready To Build The System</h3>
+        <p>Your product has real repeat purchase potential. You have traffic and some sales but growth isn't compounding the way it should. You're ready to move fast on clear priorities and you want one person watching the whole picture   not a fragmented team managing channels in isolation.</p>
+        <div class="who-tags">
+          <span class="who-tag">Wellness</span>
+          <span class="who-tag">Supplements</span>
+          <span class="who-tag">Skincare</span>
+          <span class="who-tag">Coffee</span>
+          <span class="who-tag">CPG</span>
+          <span class="who-tag">Personal Care</span>
+          <span class="who-tag">DTC</span>
+          <span class="who-tag">Subscription</span>
+        </div>
+      </div>
+
+      <div class="who-card reveal reveal-delay-1">
+        <div class="who-card-label">Probably Not A Fit</div>
+        <h3>Not Ready For This Model</h3>
+        <p>You're looking for someone to run your campaigns for you. You want guaranteed results without doing the execution work. You're not ready to share real access to your data. Or you want a big agency feel with account managers, weekly reports, and layers between you and the people doing the thinking.</p>
+        <div class="who-tags">
+          <span class="who-tag">Execution Only</span>
+          <span class="who-tag">No Data Access</span>
+          <span class="who-tag">Not Ready To Move</span>
+          <span class="who-tag">Big Agency Feel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="who-not reveal">
+      <p><strong>We keep our client list small on purpose.</strong> Every brand we work with gets the same access   daily oversight, direct communication, real strategic attention. That only works if we're selective about who we take on. If you think there's a fit, the free consultation is the right first step.</p>
+      <a href="#" onclick="openConsultation(); return false;" class="btn-primary"><span>Check If We're A Fit</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="footer-brand-logo">ret<span>AI</span>n</span>
+      <p>A full-funnel growth and retention consultancy. We become the operator your business never had   watching everything, building the plan, and telling you exactly what to do. Every day.</p>
+      <span class="footer-brand-tag">Retention by Design</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#approach">Our Approach</a></li>
+        <li><a href="#framework">Framework</a></li>
+        <li><a href="#approach">Our Approach</a></li>
+        <li><a href="#partnership">Partnership</a></li>
+        <li><a href="#" onclick="openConsultation(); return false;">Free Consultation</a></li>
+        <li><a href="#who">Who We Work With</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#" onclick="openConsultation(); return false;">Free Growth Audit</a></li>
+        <li><a href="#partnership">Done-With-You Partnership</a></li>
+        <li><a href="#framework">The retAIn Framework</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@retain.co">hello@retain.co</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#" onclick="openConsultation(); return false;">Book A Call</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 ret<span>AI</span>n. All rights reserved.</p>
+    <p>Habit fuels retention <span>·</span> Retention fuels growth <span>·</span> Growth compounds.</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+// Nav scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Framework phase tabs
+function showPhase(i) {
+  document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(t => {
+    t.classList.remove('active', 'active-gold');
+  });
+  document.getElementById('panel-' + i).classList.add('active');
+  const tab = document.getElementById('tab-' + i);
+  if (i === 3) {
+    tab.classList.add('active-gold');
+  } else {
+    tab.classList.add('active');
+  }
+}
+
+// Channel tabs
+function showChannel(i) {
+  document.querySelectorAll('.hww-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.hww-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('cpanel-' + i).classList.add('active');
+  document.getElementById('ctab-' + i).classList.add('active');
+}
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+</script>
+<script>
+// Nav scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Framework phase tabs
+function showPhase(i) {
+  document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.phase-tab').forEach(t => {
+    t.classList.remove('active', 'active-gold');
+  });
+  document.getElementById('panel-' + i).classList.add('active');
+  const tab = document.getElementById('tab-' + i);
+  if (i === 3) {
+    tab.classList.add('active-gold');
+  } else {
+    tab.classList.add('active');
+  }
+}
+
+// Channel tabs
+function showChannel(i) {
+  document.querySelectorAll('.hww-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.hww-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('cpanel-' + i).classList.add('active');
+  document.getElementById('ctab-' + i).classList.add('active');
+}
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+</script>
+
+<!-- ═══════════════════════════════════════
+     CONSULTATION OVERLAY
+════════════════════════════════════════ -->
+<style>
+.consult-overlay {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--black);
+  transform:translateX(100%);
+  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  overflow-y:auto; overflow-x:hidden;
+}
+.consult-overlay.open { transform:translateX(0); }
+
+.c-nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 56px;
+  border-bottom:0.5px solid var(--border);
+  background:rgba(9,9,9,0.97);
+  backdrop-filter:blur(16px);
+  position:sticky; top:0; z-index:10;
+}
+.c-nav-logo { font-family:'Poppins',sans-serif; font-weight:900; font-size:20px; letter-spacing:2px; color:var(--white); }
+.c-nav-logo span { color:var(--olive); }
+.c-close { display:flex; align-items:center; gap:10px; font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--ash); background:none; border:none; cursor:pointer; transition:color 0.2s; }
+.c-close:hover { color:var(--white); }
+.c-close-x { width:32px; height:32px; border:0.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; transition:border-color 0.2s; }
+.c-close:hover .c-close-x { border-color:var(--white); }
+
+.c-wrap { max-width:1100px; margin:0 auto; padding:64px 56px 100px; }
+
+.c-header { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:60px; padding-bottom:56px; border-bottom:0.5px solid var(--border); }
+.c-eyebrow { font-size:10px; font-weight:500; letter-spacing:5px; text-transform:uppercase; color:var(--olive); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+.c-eyebrow::before { content:''; width:24px; height:0.5px; background:var(--olive); display:block; }
+.c-h1 { font-family:'Poppins',sans-serif; font-weight:900; font-size:clamp(32px,4vw,52px); line-height:1.07; letter-spacing:-0.5px; text-transform:uppercase; }
+.c-h1 .ol { color:var(--olive); }
+.c-h1 .out { -webkit-text-stroke:1px var(--white); color:transparent; }
+.c-intro { font-size:15px; color:var(--ash); line-height:1.85; margin-bottom:28px; }
+.c-intro strong { color:var(--white); font-weight:500; }
+
+.c-what { background:var(--dark2); border:0.5px solid var(--border); padding:24px; }
+.c-what-title { font-size:9px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--olive); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.c-what-title::before { content:''; width:12px; height:0.5px; background:var(--olive); display:block; }
+.c-what-steps { list-style:none; }
+.c-what-step { display:flex; gap:14px; align-items:flex-start; padding:10px 0; border-bottom:0.5px solid var(--border); }
+.c-what-step:last-child { border-bottom:none; padding-bottom:0; }
+.c-what-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11px; color:var(--olive); flex-shrink:0; padding-top:1px; }
+.c-what-step p { font-size:13px; color:var(--ash); line-height:1.6; }
+.c-what-step strong { color:var(--white); font-weight:500; }
+
+.c-trust { display:flex; gap:24px; align-items:center; justify-content:center; flex-wrap:wrap; padding:24px 0; border-top:0.5px solid var(--border); border-bottom:0.5px solid var(--border); margin-bottom:48px; }
+.c-trust-item { display:flex; align-items:center; gap:8px; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ash); }
+.c-trust-item::before { content:''; width:5px; height:5px; background:var(--olive); border-radius:50%; display:block; flex-shrink:0; }
+
+.c-progress { margin-bottom:48px; }
+.c-prog-labels { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+.c-prog-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--border); text-align:center; padding-bottom:8px; border-bottom:2px solid var(--border); transition:all 0.3s; }
+.c-prog-label.active { color:var(--olive); border-bottom-color:var(--olive); }
+.c-prog-label.done { color:var(--ash); border-bottom-color:var(--ash); }
+
+.c-step { display:none; }
+.c-step.active { display:block; animation:cFadeUp 0.4s ease; }
+@keyframes cFadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+.c-step-header { margin-bottom:36px; }
+.c-step-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--border); display:block; margin-bottom:10px; }
+.c-step-title { font-family:'Poppins',sans-serif; font-weight:900; font-size:clamp(22px,3vw,32px); text-transform:uppercase; letter-spacing:0.3px; line-height:1.15; margin-bottom:8px; }
+.c-step-title .ol { color:var(--olive); }
+.c-step-sub { font-size:14px; color:var(--ash); line-height:1.7; }
+
+.c-field { margin-bottom:24px; }
+.c-label { font-size:10px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--ash); display:block; margin-bottom:10px; }
+.c-label .req { color:var(--olive); margin-left:3px; }
+.c-field-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+.ci { width:100%; background:var(--dark2); border:0.5px solid var(--border); color:var(--white); font-family:'Inter',sans-serif; font-size:14px; padding:14px 18px; outline:none; transition:border-color 0.2s; border-radius:0; display:block; }
+.ci:focus { border-color:var(--olive); }
+.ci::placeholder { color:var(--border); }
+textarea.ci { resize:vertical; min-height:100px; line-height:1.6; }
+
+.c-radio-group { display:flex; flex-direction:column; gap:8px; }
+.c-radio { display:flex; align-items:center; gap:12px; background:var(--dark2); border:0.5px solid var(--border); padding:13px 18px; cursor:pointer; transition:border-color 0.2s; user-select:none; }
+.c-radio:hover { border-color:var(--olive); }
+.c-radio.sel { border-color:var(--olive); background:rgba(120,132,117,0.08); }
+.c-radio-dot { width:14px; height:14px; border:0.5px solid var(--border); border-radius:50%; flex-shrink:0; transition:all 0.2s; position:relative; }
+.c-radio.sel .c-radio-dot { border-color:var(--olive); }
+.c-radio.sel .c-radio-dot::after { content:''; position:absolute; top:3px; left:3px; width:6px; height:6px; background:var(--olive); border-radius:50%; }
+.c-radio-text { font-size:13px; color:var(--ash); }
+.c-radio.sel .c-radio-text { color:var(--white); }
+
+.c-check-group { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.c-check { display:flex; align-items:center; gap:10px; background:var(--dark2); border:0.5px solid var(--border); padding:12px 14px; cursor:pointer; transition:border-color 0.2s; user-select:none; }
+.c-check:hover { border-color:var(--olive); }
+.c-check.on { border-color:var(--olive); background:rgba(120,132,117,0.08); }
+.c-check-box { width:14px; height:14px; border:0.5px solid var(--border); flex-shrink:0; position:relative; transition:all 0.2s; }
+.c-check.on .c-check-box { background:var(--olive); border-color:var(--olive); }
+.c-check.on .c-check-box::after { content:''; position:absolute; top:2px; left:4px; width:4px; height:7px; border:1.5px solid var(--black); border-top:none; border-left:none; transform:rotate(45deg); }
+.c-check-text { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--ash); }
+.c-check.on .c-check-text { color:var(--white); }
+
+.c-err { font-size:11px; color:#ff6b6b; letter-spacing:1px; margin-top:6px; display:none; }
+.c-err.show { display:block; }
+
+.c-access-cards { display:flex; flex-direction:column; gap:2px; margin-bottom:24px; }
+.c-ac { background:var(--dark2); border:0.5px solid var(--border); overflow:hidden; transition:border-color 0.2s; }
+.c-ac.done-ac { border-color:var(--olive); }
+.c-ac-head { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; cursor:pointer; }
+.c-ac-left { display:flex; align-items:center; gap:14px; }
+.c-ac-icon { width:32px; height:32px; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.c-ac-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+.c-ac.done-ac .c-ac-name { color:var(--olive); }
+.c-ac-status { font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+.c-ac-status.pend { color:var(--border); }
+.c-ac-status.comp { color:var(--olive); }
+.c-ac-tog { font-size:18px; color:var(--ash); transition:transform 0.3s; display:inline-block; }
+.c-ac.expanded .c-ac-tog { transform:rotate(45deg); }
+.c-ac-body { display:none; padding:0 24px 24px; border-top:0.5px solid var(--border); }
+.c-ac.expanded .c-ac-body { display:block; }
+.c-ac-steps { list-style:none; margin:16px 0 20px; }
+.c-ac-step { display:flex; gap:12px; padding:8px 0; border-bottom:0.5px solid var(--border); font-size:13px; color:var(--ash); line-height:1.6; }
+.c-ac-step:last-child { border-bottom:none; }
+.c-ac-step-n { font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; color:var(--olive); flex-shrink:0; padding-top:1px; }
+.c-ac-step strong { color:var(--white); font-weight:500; }
+.email-hl { color:var(--gold); font-weight:500; }
+.c-ac-confirm { display:flex; align-items:center; gap:12px; margin-top:16px; }
+.c-ac-btn { font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--black); background:var(--olive); padding:10px 20px; border:none; cursor:pointer; transition:background 0.2s; }
+.c-ac-btn:hover { background:var(--white); }
+.c-ac-note { font-size:11px; color:var(--border); letter-spacing:1px; }
+
+.c-calendly-header { text-align:center; margin-bottom:32px; }
+.c-calendly-title { font-family:'Poppins',sans-serif; font-weight:900; font-size:clamp(24px,3vw,38px); text-transform:uppercase; letter-spacing:-0.3px; margin-bottom:12px; line-height:1.1; }
+.c-calendly-title .ol { color:var(--olive); }
+.c-calendly-sub { font-size:15px; color:var(--ash); line-height:1.7; max-width:500px; margin:0 auto; }
+.c-calendly-frame { background:var(--dark2); border:0.5px solid var(--olive); overflow:hidden; }
+
+.c-form-nav { display:flex; align-items:center; justify-content:space-between; margin-top:40px; padding-top:32px; border-top:0.5px solid var(--border); }
+.c-btn-back { font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--ash); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; transition:color 0.2s; }
+.c-btn-back:hover { color:var(--white); }
+.c-btn-next { font-family:'Poppins',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--black); background:var(--white); padding:16px 36px; border:none; cursor:pointer; position:relative; overflow:hidden; transition:transform 0.2s; }
+.c-btn-next::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+.c-btn-next:hover::before { transform:scaleX(1); }
+.c-btn-next:hover { transform:translateY(-2px); }
+.c-btn-next span { position:relative; z-index:1; }
+
+@media(max-width:900px){
+  .c-nav { padding:18px 24px; }
+  .c-wrap { padding:40px 24px 80px; }
+  .c-header { grid-template-columns:1fr; gap:36px; }
+  .c-field-row { grid-template-columns:1fr; }
+  .c-check-group { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:500px){
+  .c-check-group { grid-template-columns:1fr; }
+  .c-prog-label { font-size:7px; letter-spacing:1px; }
+}
+</style>
+
+<div class="consult-overlay" id="consultOverlay">
+  <div class="c-nav">
+    <div class="c-nav-logo">ret<span>AI</span>n</div>
+    <button class="c-close" onclick="closeConsultation()">
+      Back to site
+      <div class="c-close-x">&#x2715;</div>
+    </button>
+  </div>
+
+  <div class="c-wrap">
+
+    <div class="c-progress">
+      <div class="c-prog-labels">
+        <div class="c-prog-label active" id="cprog-0">Your Brand</div>
+        <div class="c-prog-label" id="cprog-1">Your Channels</div>
+        <div class="c-prog-label" id="cprog-2">Grant Access</div>
+        <div class="c-prog-label" id="cprog-3">Book Your Call</div>
+      </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="c-step active" id="cstep-0">
+
+      <div class="c-header">
+        <div>
+          <div class="c-eyebrow">Free Growth Audit</div>
+          <h1 class="c-h1">Start With<br><span class="ol">Clarity.</span><br><span class="out">No Catch.</span></h1>
+        </div>
+        <div>
+          <p class="c-intro">We review your ads, your site, and your email performance <strong>before the call.</strong> When we speak, we already know where the real constraint is. No generic questions. Just a clear honest read on your business.</p>
+          <div class="c-what">
+            <div class="c-what-title">What happens next</div>
+            <ul class="c-what-steps">
+              <li class="c-what-step"><span class="c-what-num">01</span><p><strong>Fill out this form.</strong> Tell us about your brand and grant us read access. Takes about five minutes.</p></li>
+              <li class="c-what-step"><span class="c-what-num">02</span><p><strong>We get to work.</strong> We audit your ads, site, and lifecycle before the call.</p></li>
+              <li class="c-what-step"><span class="c-what-num">03</span><p><strong>Book your call.</strong> Pick a time at the end of this form. We show up already knowing what we found.</p></li>
+              <li class="c-what-step"><span class="c-what-num">04</span><p><strong>You leave with a report.</strong> Three or more written priorities. Yours to keep regardless of what comes next.</p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="c-trust">
+        <div class="c-trust-item">No sales pitch</div>
+        <div class="c-trust-item">Report is yours to keep</div>
+        <div class="c-trust-item">45 minutes flat</div>
+        <div class="c-trust-item">Limited spots per month</div>
+        <div class="c-trust-item">Read access only</div>
+      </div>
+
+      <div class="c-step-header">
+        <span class="c-step-num">Step 01 of 04</span>
+        <h2 class="c-step-title">Tell Us About<br><span class="ol">Your Brand</span></h2>
+        <p class="c-step-sub">Basic information so we know who we are talking to before we look at anything.</p>
+      </div>
+      <div class="c-field-row">
+        <div class="c-field">
+          <label class="c-label">Brand Name <span class="req">*</span></label>
+          <input type="text" class="ci" id="c-brand" placeholder="Your brand name"/>
+          <div class="c-err" id="cerr-brand">Please enter your brand name</div>
+        </div>
+        <div class="c-field">
+          <label class="c-label">Website URL <span class="req">*</span></label>
+          <input type="text" class="ci" id="c-site" placeholder="https://yourbrand.com"/>
+          <div class="c-err" id="cerr-site">Please enter your website URL</div>
+        </div>
+      </div>
+      <div class="c-field-row">
+        <div class="c-field">
+          <label class="c-label">Your Name <span class="req">*</span></label>
+          <input type="text" class="ci" id="c-name" placeholder="First and last name"/>
+          <div class="c-err" id="cerr-name">Please enter your name</div>
+        </div>
+        <div class="c-field">
+          <label class="c-label">Your Email <span class="req">*</span></label>
+          <input type="text" class="ci" id="c-email" placeholder="you@yourbrand.com"/>
+          <div class="c-err" id="cerr-email">Please enter a valid email</div>
+        </div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Monthly Revenue Range <span class="req">*</span></label>
+        <div class="c-radio-group" id="cg-rev">
+          <div class="c-radio" onclick="cRadio(this,'rev')"><div class="c-radio-dot"></div><span class="c-radio-text">Under $10K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'rev')"><div class="c-radio-dot"></div><span class="c-radio-text">$10K to $50K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'rev')"><div class="c-radio-dot"></div><span class="c-radio-text">$50K to $150K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'rev')"><div class="c-radio-dot"></div><span class="c-radio-text">$150K to $500K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'rev')"><div class="c-radio-dot"></div><span class="c-radio-text">$500K+ per month</span></div>
+        </div>
+        <div class="c-err" id="cerr-rev">Please select your revenue range</div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Subscription program? <span class="req">*</span></label>
+        <div class="c-radio-group" id="cg-sub">
+          <div class="c-radio" onclick="cRadio(this,'sub')"><div class="c-radio-dot"></div><span class="c-radio-text">Yes, we have an active subscription</span></div>
+          <div class="c-radio" onclick="cRadio(this,'sub')"><div class="c-radio-dot"></div><span class="c-radio-text">No, one-time purchase only</span></div>
+          <div class="c-radio" onclick="cRadio(this,'sub')"><div class="c-radio-dot"></div><span class="c-radio-text">We are considering adding subscription</span></div>
+        </div>
+        <div class="c-err" id="cerr-sub">Please select an option</div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Primary product or category</label>
+        <input type="text" class="ci" id="c-product" placeholder="e.g. Collagen supplements, skincare, coffee"/>
+      </div>
+      <div class="c-form-nav">
+        <div></div>
+        <button class="c-btn-next" onclick="cNext(0)"><span>Next: Your Channels &#x2192;</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="c-step" id="cstep-1">
+      <div class="c-step-header">
+        <span class="c-step-num">Step 02 of 04</span>
+        <h2 class="c-step-title">Your Channels<br><span class="ol">And Where You Are</span></h2>
+        <p class="c-step-sub">Tell us where you are running and what your biggest constraint feels like right now.</p>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Ad platforms currently running <span class="req">*</span></label>
+        <div class="c-check-group" id="cg-platforms">
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">Meta (FB/IG)</span></div>
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">Google</span></div>
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">TikTok</span></div>
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">YouTube</span></div>
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">Pinterest</span></div>
+          <div class="c-check" onclick="cCheck(this)"><div class="c-check-box"></div><span class="c-check-text">Other</span></div>
+        </div>
+        <div class="c-err" id="cerr-platforms">Please select at least one platform</div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Monthly ad spend <span class="req">*</span></label>
+        <div class="c-radio-group" id="cg-spend">
+          <div class="c-radio" onclick="cRadio(this,'spend')"><div class="c-radio-dot"></div><span class="c-radio-text">Under $5K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'spend')"><div class="c-radio-dot"></div><span class="c-radio-text">$5K to $15K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'spend')"><div class="c-radio-dot"></div><span class="c-radio-text">$15K to $50K per month</span></div>
+          <div class="c-radio" onclick="cRadio(this,'spend')"><div class="c-radio-dot"></div><span class="c-radio-text">$50K+ per month</span></div>
+        </div>
+        <div class="c-err" id="cerr-spend">Please select your spend range</div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">Email platform <span class="req">*</span></label>
+        <div class="c-radio-group" id="cg-esp">
+          <div class="c-radio" onclick="cRadio(this,'esp')"><div class="c-radio-dot"></div><span class="c-radio-text">Klaviyo</span></div>
+          <div class="c-radio" onclick="cRadio(this,'esp')"><div class="c-radio-dot"></div><span class="c-radio-text">Omnisend</span></div>
+          <div class="c-radio" onclick="cRadio(this,'esp')"><div class="c-radio-dot"></div><span class="c-radio-text">Mailchimp</span></div>
+          <div class="c-radio" onclick="cRadio(this,'esp')"><div class="c-radio-dot"></div><span class="c-radio-text">Other</span></div>
+        </div>
+        <div class="c-err" id="cerr-esp">Please select your email platform</div>
+      </div>
+      <div class="c-field">
+        <label class="c-label">What does your biggest growth problem feel like right now? <span class="req">*</span></label>
+        <textarea class="ci" id="c-problem" placeholder="Be as specific as you want. This is what we focus the audit around."></textarea>
+        <div class="c-err" id="cerr-problem">Please tell us about your biggest challenge</div>
+      </div>
+      <div class="c-form-nav">
+        <button class="c-btn-back" onclick="cPrev(1)">&#x2190; Back</button>
+        <button class="c-btn-next" onclick="cNext(1)"><span>Next: Grant Access &#x2192;</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="c-step" id="cstep-2">
+      <div class="c-step-header">
+        <span class="c-step-num">Step 03 of 04</span>
+        <h2 class="c-step-title">Grant Read Access<br><span class="ol">So We Can Get To Work</span></h2>
+        <p class="c-step-sub">Read-only access to your accounts so we can audit them before the call. Follow the steps below for each platform. Takes about five minutes total.</p>
+      </div>
+      <div class="c-access-cards">
+
+        <div class="c-ac expanded" id="cac-shopify">
+          <div class="c-ac-head" onclick="cToggleAc('shopify')">
+            <div class="c-ac-left"><div class="c-ac-icon">&#x1F6CD;</div><div class="c-ac-name">Shopify</div></div>
+            <div style="display:flex;align-items:center;gap:16px;"><span class="c-ac-status pend" id="cast-shopify">Pending</span><span class="c-ac-tog">+</span></div>
+          </div>
+          <div class="c-ac-body">
+            <ul class="c-ac-steps">
+              <li class="c-ac-step"><span class="c-ac-step-n">1</span><div>Go to your Shopify Admin and click <strong>Settings</strong> in the bottom left.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">2</span><div>Click <strong>Users and permissions</strong>, then <strong>Add staff</strong>.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">3</span><div>Enter <span class="email-hl">contact@retainrbd.com</span> and set permissions to <strong>View only</strong>.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">4</span><div>Click <strong>Send invite</strong>. Done.</div></li>
+            </ul>
+            <div class="c-ac-confirm"><button class="c-ac-btn" onclick="cConfirmAc('shopify')">Mark as Done</button><span class="c-ac-note">Read only. We cannot make changes.</span></div>
+          </div>
+        </div>
+
+        <div class="c-ac" id="cac-meta">
+          <div class="c-ac-head" onclick="cToggleAc('meta')">
+            <div class="c-ac-left"><div class="c-ac-icon">&#x1F4D8;</div><div class="c-ac-name">Meta Business Suite</div></div>
+            <div style="display:flex;align-items:center;gap:16px;"><span class="c-ac-status pend" id="cast-meta">Pending</span><span class="c-ac-tog">+</span></div>
+          </div>
+          <div class="c-ac-body">
+            <ul class="c-ac-steps">
+              <li class="c-ac-step"><span class="c-ac-step-n">1</span><div>Go to <strong>business.facebook.com</strong> and open Business Settings.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">2</span><div>Under <strong>Users</strong>, click <strong>Partners</strong> then <strong>Add</strong>.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">3</span><div>Enter <span class="email-hl">contact@retainrbd.com</span>. Set role to <strong>Analyst</strong> (view only).</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">4</span><div>Assign access to your Ad Account and save.</div></li>
+            </ul>
+            <div class="c-ac-confirm"><button class="c-ac-btn" onclick="cConfirmAc('meta')">Mark as Done</button><span class="c-ac-note">Analyst role is read only.</span></div>
+          </div>
+        </div>
+
+        <div class="c-ac" id="cac-google">
+          <div class="c-ac-head" onclick="cToggleAc('google')">
+            <div class="c-ac-left"><div class="c-ac-icon">&#x1F50D;</div><div class="c-ac-name">Google Ads</div></div>
+            <div style="display:flex;align-items:center;gap:16px;"><span class="c-ac-status pend" id="cast-google">Pending</span><span class="c-ac-tog">+</span></div>
+          </div>
+          <div class="c-ac-body">
+            <ul class="c-ac-steps">
+              <li class="c-ac-step"><span class="c-ac-step-n">1</span><div>In Google Ads, click the <strong>Admin</strong> icon top right.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">2</span><div>Click <strong>Access and security</strong>, then <strong>+</strong> to add a user.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">3</span><div>Enter <span class="email-hl">contact@retainrbd.com</span> and set access to <strong>Read only</strong>.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">4</span><div>Click <strong>Send invitation</strong>. Done.</div></li>
+            </ul>
+            <div class="c-ac-confirm"><button class="c-ac-btn" onclick="cConfirmAc('google')">Mark as Done</button><span class="c-ac-note">Read only. We cannot change your campaigns.</span></div>
+          </div>
+        </div>
+
+        <div class="c-ac" id="cac-email">
+          <div class="c-ac-head" onclick="cToggleAc('email')">
+            <div class="c-ac-left"><div class="c-ac-icon">&#x2709;&#xFE0F;</div><div class="c-ac-name">Email Platform</div></div>
+            <div style="display:flex;align-items:center;gap:16px;"><span class="c-ac-status pend" id="cast-email">Pending</span><span class="c-ac-tog">+</span></div>
+          </div>
+          <div class="c-ac-body">
+            <ul class="c-ac-steps">
+              <li class="c-ac-step"><span class="c-ac-step-n">1</span><div><strong>Klaviyo:</strong> Account Settings, Users, Invite User. Enter <span class="email-hl">contact@retainrbd.com</span> and set role to <strong>Viewer</strong>.</div></li>
+              <li class="c-ac-step"><span class="c-ac-step-n">2</span><div><strong>Other platforms:</strong> Add <span class="email-hl">contact@retainrbd.com</span> as a viewer or read-only team member in your account settings.</div></li>
+            </ul>
+            <div class="c-ac-confirm"><button class="c-ac-btn" onclick="cConfirmAc('email')">Mark as Done</button><span class="c-ac-note">Viewer only. We cannot send or edit emails.</span></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="c-field">
+        <label class="c-label">Anything else you want us to know before the call?</label>
+        <textarea class="ci" id="c-notes" placeholder="Context on your business, specific areas to focus on, or anything that would help us prepare..."></textarea>
+      </div>
+      <div class="c-form-nav">
+        <button class="c-btn-back" onclick="cPrev(2)">&#x2190; Back</button>
+        <button class="c-btn-next" onclick="cNext(2)"><span>Next: Book Your Call &#x2192;</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="c-step" id="cstep-3">
+      <div class="c-calendly-header">
+        <h2 class="c-calendly-title">One Last Step.<br><span class="ol">Pick Your Time.</span></h2>
+        <p class="c-calendly-sub">We have everything we need. Click below to pick your time. We will show up already knowing what we found. No generic questions. Just clarity.</p>
+      </div>
+      <div style="background:var(--dark2);border:0.5px solid var(--olive);padding:56px 48px;text-align:center;">
+        <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--olive);margin-bottom:20px;font-weight:500;">Your free 45-minute audit call</div>
+        <a href="https://calendly.com/jonreh26/30min?back=1&month=2026-05" target="_blank" style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--black);background:var(--white);padding:20px 48px;display:inline-block;text-decoration:none;position:relative;overflow:hidden;transition:transform 0.2s;" onmouseover="this.style.background='#FFB833'" onmouseout="this.style.background='#FFFFFF'">
+          Book Your Call &#x2192;
+        </a>
+        <div style="margin-top:24px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ash);display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:var(--olive);border-radius:50%;display:block;"></span>Opens in a new tab</div>
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ash);display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:var(--olive);border-radius:50%;display:block;"></span>45 minutes flat</div>
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ash);display:flex;align-items:center;gap:8px;"><span style="width:5px;height:5px;background:var(--olive);border-radius:50%;display:block;"></span>Limited spots per month</div>
+        </div>
+      </div>
+      <div class="c-form-nav" style="margin-top:28px;">
+        <button class="c-btn-back" onclick="cPrev(3)">&#x2190; Back</button>
+        <div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var cCurrentStep = 0;
+
+function openConsultation() {
+  var overlay = document.getElementById('consultOverlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  cGoTo(0);
+  overlay.scrollTo(0, 0);
+}
+
+function closeConsultation() {
+  document.getElementById('consultOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeConsultation();
+});
+
+function cNext(from) {
+  if (!cValidate(from)) return;
+  cGoTo(from + 1);
+}
+
+function cPrev(from) {
+  cGoTo(from - 1);
+}
+
+function cGoTo(to) {
+  var current = document.getElementById('cstep-' + cCurrentStep);
+  var next = document.getElementById('cstep-' + to);
+  if (current) current.classList.remove('active');
+  cUpdateProg(cCurrentStep, 'done');
+  cCurrentStep = to;
+  if (next) next.classList.add('active');
+  cUpdateProg(to, 'active');
+  if (to === 3) {
+    // Calendly opens in new tab - nothing to load
+  }
+  var overlay = document.getElementById('consultOverlay');
+  if (overlay) overlay.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cUpdateProg(step, state) {
+  var el = document.getElementById('cprog-' + step);
+  if (!el) return;
+  el.classList.remove('active', 'done');
+  el.classList.add(state);
+}
+
+function cValidate(step) {
+  var ok = true;
+  if (step === 0) {
+    ok = cVF('c-brand', 'cerr-brand', function(v){ return v.trim().length > 0; }) && ok;
+    ok = cVF('c-site', 'cerr-site', function(v){ return v.trim().length > 0; }) && ok;
+    ok = cVF('c-name', 'cerr-name', function(v){ return v.trim().length > 0; }) && ok;
+    ok = cVF('c-email', 'cerr-email', function(v){ return v.indexOf('@') > 0 && v.indexOf('.') > 0; }) && ok;
+    ok = cVR('cg-rev', 'cerr-rev') && ok;
+    ok = cVR('cg-sub', 'cerr-sub') && ok;
+  }
+  if (step === 1) {
+    ok = cVC('cg-platforms', 'cerr-platforms') && ok;
+    ok = cVR('cg-spend', 'cerr-spend') && ok;
+    ok = cVR('cg-esp', 'cerr-esp') && ok;
+    ok = cVF('c-problem', 'cerr-problem', function(v){ return v.trim().length > 10; }) && ok;
+  }
+  return ok;
+}
+
+function cVF(id, errId, check) {
+  var el = document.getElementById(id);
+  var err = document.getElementById(errId);
+  if (!el) return true;
+  if (!check(el.value)) {
+    el.style.borderColor = '#ff6b6b';
+    if (err) err.classList.add('show');
+    return false;
+  }
+  el.style.borderColor = '';
+  if (err) err.classList.remove('show');
+  return true;
+}
+
+function cVR(groupId, errId) {
+  var group = document.getElementById(groupId);
+  var err = document.getElementById(errId);
+  if (!group) return true;
+  var sel = group.querySelector('.c-radio.sel');
+  if (!sel) {
+    if (err) err.classList.add('show');
+    return false;
+  }
+  if (err) err.classList.remove('show');
+  return true;
+}
+
+function cVC(groupId, errId) {
+  var group = document.getElementById(groupId);
+  var err = document.getElementById(errId);
+  if (!group) return true;
+  var checked = group.querySelectorAll('.c-check.on');
+  if (checked.length === 0) {
+    if (err) err.classList.add('show');
+    return false;
+  }
+  if (err) err.classList.remove('show');
+  return true;
+}
+
+function cRadio(el, group) {
+  var groupEl = el.closest('.c-radio-group');
+  if (groupEl) {
+    groupEl.querySelectorAll('.c-radio').forEach(function(r) { r.classList.remove('sel'); });
+  }
+  el.classList.add('sel');
+}
+
+function cCheck(el) {
+  el.classList.toggle('on');
+}
+
+function cToggleAc(id) {
+  var card = document.getElementById('cac-' + id);
+  card.classList.toggle('expanded');
+  var tog = card.querySelector('.c-ac-tog');
+  tog.textContent = card.classList.contains('expanded') ? 'x' : '+';
+}
+
+function cConfirmAc(id) {
+  var card = document.getElementById('cac-' + id);
+  card.classList.add('done-ac');
+  card.classList.remove('expanded');
+  var tog = card.querySelector('.c-ac-tog');
+  tog.innerHTML = '&#10003;';
+  tog.style.color = 'var(--olive)';
+  tog.style.fontSize = '20px';
+  var status = document.getElementById('cast-' + id);
+  status.textContent = 'Done';
+  status.classList.remove('pend');
+  status.classList.add('comp');
+}
+</script>
+
+</body>
+</html>
